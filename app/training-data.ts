@@ -28,6 +28,7 @@ export type LibraryExercise = {
   name: string;
   prescription: string;
   video: string;
+  alternateVideo?: string;
   cues: string[];
   goal: string;
 };
@@ -298,7 +299,8 @@ export const drJoeLibrary: DrJoeSession[] = [
         id: "s01-ankle-stretch",
         name: "Half-Kneeling Ankle Dorsiflexion Stretch",
         prescription: "2 sets × 20–30 sec each side",
-        video: "https://www.youtube.com/watch?v=2B9x5pQJY7M",
+        video: "https://www.youtube.com/shorts/gUltNrPPE28",
+        alternateVideo: "https://www.youtube.com/shorts/wKWAOJ4tAhM",
         cues: ["Keep the heel on the ground", "Slowly shift forward", "Do not rotate the foot outward", "Stretch gently only"],
         goal: "Improve ankle and calf mobility and shock absorption during running and tennis.",
       },

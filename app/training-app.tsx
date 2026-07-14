@@ -114,7 +114,10 @@ function LibraryExerciseCard({ exercise, index }: { exercise: LibraryExercise; i
         <div className="library-exercise-detail">
           <ul className="cue-list">{exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}</ul>
           <p className="exercise-goal">Why: {exercise.goal}</p>
-          <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch Dr. Joe demo <span aria-hidden="true">↗</span></a>
+          <div className="library-video-links">
+            <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch Dr. Joe demo <span aria-hidden="true">↗</span></a>
+            {exercise.alternateVideo && <a className="video-link" href={exercise.alternateVideo} target="_blank" rel="noreferrer">Watch alternate demo <span aria-hidden="true">↗</span></a>}
+          </div>
         </div>
       )}
     </article>

@@ -73,6 +73,9 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /id: "session-02"/);
   assert.match(data, /Tibial Internal Rotation Mobilisation/);
   assert.match(data, /Goblet Squat with Left Weight Bias/);
+  assert.match(data, /gUltNrPPE28/);
+  assert.match(data, /wKWAOJ4tAhM/);
+  assert.match(app, /Watch alternate demo/);
   assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(data, /id: "dr-joe-a"/);
