@@ -66,7 +66,7 @@ function formatTimer(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-function ExerciseCard({ exercise, checks, onCheck }: { exercise: Exercise; checks: boolean[]; onCheck: (set: number, checked: boolean) => void }) {
+function ExerciseCard({ exercise, checks, onCheck, demoLabel }: { exercise: Exercise; checks: boolean[]; onCheck: (set: number, checked: boolean) => void; demoLabel: string }) {
   const [open, setOpen] = useState(false);
   const done = checks.filter(Boolean).length;
   return (
@@ -94,7 +94,7 @@ function ExerciseCard({ exercise, checks, onCheck }: { exercise: Exercise; check
             {exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}
           </ul>
           {exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}
-          {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch osteopath demo <span aria-hidden="true">↗</span></a>}
+          {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">{demoLabel} <span aria-hidden="true">↗</span></a>}
         </div>
       )}
     </article>
@@ -238,7 +238,7 @@ export function TrainingApp() {
                 <div className="progress-ring" style={{ "--progress": `${totals.total ? (totals.completed / totals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{totals.total ? Math.round((totals.completed / totals.total) * 100) : 0}%</span></div>
               </div>
               <div className="exercise-list">
-                {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} />)}
+                {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel={workout.id.startsWith("gym-") ? "Watch exercise demo" : "Watch Dr. Joe demo"} />)}
               </div>
               <button className="finish-button" onClick={() => setShowFinish(true)}>Finish session <span>→</span></button>
             </section>
