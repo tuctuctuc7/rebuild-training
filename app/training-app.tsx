@@ -147,6 +147,37 @@ function LibraryExerciseCard({ exercise, index }: { exercise: LibraryExercise; i
   );
 }
 
+function WarmupExerciseCard({ exercise, index, checks, onCheck }: { exercise: Exercise; index: number; checks: boolean[]; onCheck: (set: number, checked: boolean) => void }) {
+  const [open, setOpen] = useState(false);
+  const done = checks.filter(Boolean).length;
+  const complete = done === exercise.sets;
+  return (
+    <article className={`library-exercise warmup-exercise ${open ? "is-open" : ""} ${complete ? "exercise-complete" : ""}`}>
+      <button onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="library-order">{complete ? "✓" : String(index + 1).padStart(2, "0")}</span>
+        <span className="library-exercise-copy"><strong>{exercise.name}</strong><small>{exercise.prescription}{exercise.side ? ` · ${exercise.side}` : ""}</small></span>
+        <span className="chevron" aria-hidden="true">{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+        <div className="library-exercise-detail">
+          <div className="set-row" aria-label={`Sets for ${exercise.name}`}>
+            {Array.from({ length: exercise.sets }, (_, setIndex) => (
+              <label className={`set-check ${checks[setIndex] ? "checked" : ""}`} key={setIndex}>
+                <input type="checkbox" checked={Boolean(checks[setIndex])} onChange={(event) => onCheck(setIndex, event.target.checked)} />
+                <span>{checks[setIndex] ? "✓" : setIndex + 1}</span>
+              </label>
+            ))}
+            <span className="rest-label">{exercise.restSeconds}s rest</span>
+          </div>
+          <ul className="cue-list">{exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}</ul>
+          {exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}
+          {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch Dr. Joe demo <span aria-hidden="true">↗</span></a>}
+        </div>
+      )}
+    </article>
+  );
+}
+
 export function TrainingApp() {
   const todayWeekday = weekdayIndex();
   const todayIndex = Math.max(0, workouts.findIndex((item) => item.weekday === todayWeekday));
@@ -273,6 +304,12 @@ export function TrainingApp() {
     const completed = warmup.reduce((sum, exercise) => sum + (workoutProgress[exercise.id] ?? []).filter(Boolean).length, 0);
     return { total, completed };
   }, [warmup, workoutProgress]);
+  const warmupSessions = useMemo(() => drJoeLibrary.map((session) => {
+    const exercises = warmup.filter((exercise) => exercise.id.startsWith(`warmup-s${session.number}-`));
+    const total = exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+    const completed = exercises.reduce((sum, exercise) => sum + (workoutProgress[exercise.id] ?? []).filter(Boolean).length, 0);
+    return { ...session, exercises, total, completed };
+  }).filter((session) => session.exercises.length > 0), [warmup, workoutProgress]);
   const sessionTotals = useMemo(() => {
     const total = workout.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
     const completed = workout.exercises.reduce((sum, exercise) => sum + (workoutProgress[exercise.id] ?? []).filter(Boolean).length, 0);
@@ -401,8 +438,22 @@ export function TrainingApp() {
                 <div><p className="eyebrow">DAILY DR. JOE WARM-UP</p><h3>{warmupTotals.completed}/{warmupTotals.total} sets complete</h3><p>Done before tennis, gym, recovery, or rest. Session 01 + Session 02 every day.</p></div>
                 <div className="progress-ring" style={{ "--progress": `${warmupTotals.total ? (warmupTotals.completed / warmupTotals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{warmupTotals.total ? Math.round((warmupTotals.completed / warmupTotals.total) * 100) : 0}%</span></div>
               </div>
-              <div className="exercise-list">
-                {warmup.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel="Watch Dr. Joe demo" />)}
+              <div className="today-warmup-sessions">
+                {warmupSessions.map((session) => (
+                  <section className="library-session today-warmup-session" key={session.id}>
+                    <header>
+                      <div className="session-number"><small>SESSION</small><strong>{session.number}</strong></div>
+                      <div><h3>{session.title}</h3><p>{session.summary}</p></div>
+                    </header>
+                    <div className="warmup-session-progress" aria-label={`${session.completed} of ${session.total} sets complete`}>
+                      <span>{session.completed}/{session.total} sets</span>
+                      <div><i style={{ width: `${session.total ? (session.completed / session.total) * 100 : 0}%` }} /></div>
+                    </div>
+                    <div className="library-exercise-list">
+                      {session.exercises.map((exercise, index) => <WarmupExerciseCard key={exercise.id} exercise={exercise} index={index} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} />)}
+                    </div>
+                  </section>
+                ))}
               </div>
             </section>
           )}

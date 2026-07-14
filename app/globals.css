@@ -190,6 +190,18 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .library-exercise-detail { border-top: 1px solid var(--line); padding: 2px 14px 13px; }
 .library-exercise-detail .cue-list { margin-top: 13px; }
 .library-video-links { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.today-warmup-sessions { display: grid; gap: 14px; }
+.today-warmup-session { padding: 15px; border-radius: 22px; }
+.today-warmup-session > header { padding-bottom: 13px; }
+.today-warmup-session .session-number { width: 47px; height: 50px; border-radius: 13px; }
+.today-warmup-session .session-number strong { font-size: 15px; }
+.today-warmup-session h3 { font-size: 16px; }
+.warmup-session-progress { display: flex; align-items: center; gap: 11px; margin: -2px 2px 13px; color: var(--muted); font: 650 8px/1 var(--font-geist-mono), monospace; text-transform: uppercase; }
+.warmup-session-progress > span { flex: 0 0 auto; }
+.warmup-session-progress > div { height: 4px; flex: 1; overflow: hidden; border-radius: 999px; background: rgba(20,34,28,.09); }
+.warmup-session-progress i { display: block; height: 100%; border-radius: inherit; background: var(--green); transition: width .2s ease; }
+.warmup-exercise.exercise-complete { background: rgba(227,242,219,.82); }
+.warmup-exercise.exercise-complete .library-order { background: var(--green); color: white; }
 
 .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 21px; }
 .stat-grid div { border-top: 1px solid var(--ink); padding-top: 11px; display: flex; flex-direction: column; gap: 4px; }

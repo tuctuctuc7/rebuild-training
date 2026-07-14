@@ -30,6 +30,10 @@ test("server-renders the finished training app and metadata", async () => {
   assert.match(html, /Week/);
   assert.match(html, /Library/);
   assert.match(html, /History/);
+  assert.match(html, /class="today-warmup-sessions"/);
+  assert.match(html, /class="library-session today-warmup-session"/);
+  assert.match(html, /Restore the lower-leg chain/);
+  assert.match(html, /Re-centre the squat/);
   assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
   assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
   assert.match(html, /property="og:image" content="https:\/\/build\.tomnguyen\.co\/get-fit\/og\.png"/);
@@ -112,6 +116,8 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.equal((data.match(/warmup: dailyDrJoeWarmup/g) ?? []).length, 7);
   assert.match(app, /DAILY DR\. JOE WARM-UP/);
   assert.match(app, /Done before tennis, gym, recovery, or rest/);
+  assert.match(app, /warmup-s\$\{session\.number\}-/);
+  assert.match(app, /WarmupExerciseCard/);
   assert.match(data, /Hanging leg raises/);
   assert.match(data, /2 sets × 15 reps · bodyweight/);
   assert.match(data, /Incline treadmill walk/);
