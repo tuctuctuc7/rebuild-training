@@ -29,9 +29,9 @@ test("server-renders the finished training app and metadata", async () => {
   assert.match(html, /Today/);
   assert.match(html, /Week/);
   assert.match(html, /History/);
-  assert.match(html, /rel="manifest" href="\/manifest\.webmanifest"/);
-  assert.match(html, /rel="icon" href="\/icon-192\.png"/);
-  assert.match(html, /property="og:image" content="https?:\/\/[^\"]+\/og\.png"/);
+  assert.match(html, /rel="manifest" href="https:\/\/rebuild-athletic-tom\.tuc7\.chatgpt\.site\/manifest\.webmanifest"/);
+  assert.match(html, /rel="icon" href="https:\/\/rebuild-athletic-tom\.tuc7\.chatgpt\.site\/icon-192\.png"/);
+  assert.match(html, /property="og:image" content="https:\/\/rebuild-athletic-tom\.tuc7\.chatgpt\.site\/og\.png"/);
   assert.doesNotMatch(html, /codex-preview|taking shape|SkeletonPreview|react-loading-skeleton/i);
 });
 
