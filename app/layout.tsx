@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   applicationName: "Rebuild",
   appleWebApp: { capable: true, statusBarStyle: "black-translucent", title: "Rebuild" },
   icons: { icon: "/get-fit/icon-192.png", apple: "/get-fit/icon-192.png" },
-  alternates: { canonical: "/get-fit" },
-  openGraph: { title, description, type: "website", url: "/get-fit", images: [{ url: "/get-fit/og.png", width: 1536, height: 1024, alt: "Rebuild — Return athletic." }] },
+  alternates: { canonical: "/get-fit/" },
+  openGraph: { title, description, type: "website", url: "/get-fit/", images: [{ url: "/get-fit/og.png", width: 1536, height: 1024, alt: "Rebuild — Return athletic." }] },
   twitter: { card: "summary_large_image", title, description, images: ["/get-fit/og.png"] },
 };
 
