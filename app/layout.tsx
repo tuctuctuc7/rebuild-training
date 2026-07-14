@@ -5,7 +5,7 @@ const title = "Rebuild · Return Athletic";
 const description = "A calm, load-aware weekly training companion for tennis, strength and recovery.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rebuild-athletic-tom.tuc7.chatgpt.site"),
+  metadataBase: new URL("https://tomnguyen.co"),
   title,
   description,
   manifest: "/manifest.webmanifest",

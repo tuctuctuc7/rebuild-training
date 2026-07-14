@@ -1,0 +1,9 @@
+.openai
+.wrangler
+.next
+dist
+db
+worker
+examples
+tests
+*.tsbuildinfo
