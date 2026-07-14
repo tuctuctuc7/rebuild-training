@@ -66,7 +66,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Recovery only/);
   assert.match(app, /Reduce by 30–50%/);
   assert.match(app, /Save to history/);
-  assert.match(app, /Watch exercise demo/);
+  assert.match(app, /View exercise demo/);
   assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(data, /id: "dr-joe-a"/);

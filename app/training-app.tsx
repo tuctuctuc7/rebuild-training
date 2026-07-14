@@ -238,7 +238,7 @@ export function TrainingApp() {
                 <div className="progress-ring" style={{ "--progress": `${totals.total ? (totals.completed / totals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{totals.total ? Math.round((totals.completed / totals.total) * 100) : 0}%</span></div>
               </div>
               <div className="exercise-list">
-                {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel={workout.id.startsWith("gym-") ? "Watch exercise demo" : "Watch Dr. Joe demo"} />)}
+                {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel={workout.id.startsWith("gym-") ? "View exercise demo" : "Watch Dr. Joe demo"} />)}
               </div>
               <button className="finish-button" onClick={() => setShowFinish(true)}>Finish session <span>→</span></button>
             </section>
