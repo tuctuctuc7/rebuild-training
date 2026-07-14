@@ -2,7 +2,7 @@
   "name": "Rebuild · Return Athletic",
   "short_name": "Rebuild",
   "description": "A load-aware weekly training companion for tennis, strength and recovery.",
-  "start_url": "/get-fit",
+  "start_url": "/get-fit/",
   "scope": "/get-fit/",
   "display": "standalone",
   "background_color": "#f3f1e9",

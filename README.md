@@ -1,98 +1,78 @@
-# vinext-starter
+# Rebuild · Return Athletic
 
-A clean full-stack starter running on
-[vinext](https://github.com/cloudflare/vinext), with optional Cloudflare D1 and
-Drizzle support.
+A mobile-first personal training companion for returning to tennis after an Achilles injury. It combines a weekly tennis and gym schedule, Dr. Joe's mobility and lower-limb routines, readiness checks, exercise demos, set tracking, and session history.
 
-## Prerequisites
+Live app: [build.tomnguyen.co/get-fit/](https://build.tomnguyen.co/get-fit/)
 
-- Node.js `>=22.13.0`
+## Product behavior
 
-## Quick Start
+- Monday, Wednesday, and Friday tennis schedule
+- Separate Dr. Joe and gym sessions
+- Chronological Dr. Joe exercise library with reference videos
+- Energy and pain check-ins with load recommendations
+- Per-set completion tracking, rest timers, RPE, and local history
+- Past and future week navigation
+- Installable iPhone Home Screen experience
+- Offline shell, standalone safe areas, pull-to-refresh, and a frosted status-bar layer
+
+Training state is intentionally local-first. It is saved under `rebuild-training-v1` in `localStorage`, so it remains on the same browser or installed Home Screen app but does not sync across devices or between Safari and the installed app.
+
+## Stack
+
+- Next.js 16 App Router and React 19
+- TypeScript and Tailwind CSS
+- `vinext` for the local/Cloudflare-compatible build path
+- Vercel production deployment
+- Web App Manifest and a small custom service worker
+
+The application is hosted beneath the `/get-fit` base path. Keep that base path consistent in `next.config.ts`, metadata, the manifest, service-worker registration, and public asset URLs.
+
+## Local development
+
+Requires Node.js `>=22.13.0`.
 
 ```bash
 npm install
 npm run dev
-npm run build
 ```
 
-This starter does not use `wrangler.jsonc`.
+Useful checks:
 
-## Included Shape
-
-- edit site code under `app/`
-- `.openai/hosting.json` declares optional Sites D1 and R2 bindings
-- `vite.config.ts` simulates declared bindings for local development
-- `db/schema.ts` starts intentionally empty
-- `examples/d1/` contains an optional D1 example surface
-- `drizzle.config.ts` supports local migration generation when needed
-
-## Workspace Auth Headers
-
-OpenAI workspace sites can read the current user's email from
-`oai-authenticated-user-email`.
-
-SIWC-authenticated workspace sites may also receive
-`oai-authenticated-user-full-name` when the user's SIWC profile has a non-empty
-`name` claim. The full-name value is percent-encoded UTF-8 and is accompanied by
-`oai-authenticated-user-full-name-encoding: percent-encoded-utf-8`.
-
-Treat the full name as optional and fall back to email when it is absent:
-
-```tsx
-import { headers } from "next/headers";
-
-export default async function Home() {
-  const requestHeaders = await headers();
-  const email = requestHeaders.get("oai-authenticated-user-email");
-  const encodedFullName = requestHeaders.get("oai-authenticated-user-full-name");
-  const fullName =
-    encodedFullName &&
-    requestHeaders.get("oai-authenticated-user-full-name-encoding") ===
-      "percent-encoded-utf-8"
-      ? decodeURIComponent(encodedFullName)
-      : null;
-
-  const displayName = fullName ?? email;
-  // ...
-}
+```bash
+npm run lint
+npm test
+npx next build
 ```
 
-## Optional Dispatch-Owned ChatGPT Sign-In
+`npm test` builds the app and verifies the rendered interface, training content, PWA metadata, local persistence hooks, and offline assets.
 
-Import the ready-to-use helpers from `app/chatgpt-auth.ts` when the site needs
-optional or required ChatGPT sign-in:
+## Main files
 
-- Use `getChatGPTUser()` for optional signed-in UI.
-- Use `requireChatGPTUser(returnTo)` for server-rendered pages that should send
-  anonymous visitors through Sign in with ChatGPT.
-- Use `chatGPTSignInPath(returnTo)` and `chatGPTSignOutPath(returnTo)` for
-  browser links or actions.
-- Pass a same-origin relative `returnTo` path for the destination after sign-in
-  or sign-out. The helper validates and safely encodes it.
-- Mark protected pages with `export const dynamic = "force-dynamic"` because
-  they depend on per-request identity headers.
+- `app/training-data.ts` — weekly schedule, Dr. Joe library, exercises, cues, and video links
+- `app/training-app.tsx` — interactive app, local persistence, readiness, timers, history, and Home Screen gestures
+- `app/globals.css` — responsive interface and standalone iPhone treatments
+- `public/manifest.webmanifest` — install metadata and launch scope
+- `public/sw.js` — offline shell and app-update behavior
+- `tests/rendered-html.test.mjs` — build and feature regression coverage
 
-Dispatch owns `/signin-with-chatgpt`, `/signout-with-chatgpt`, `/callback`, the
-OAuth cookies, and identity header injection. Do not implement app routes for
-those reserved paths. Routes that do not import and call the helper remain
-anonymous-compatible.
+## PWA maintenance
 
-SIWC establishes identity only; it does not prove workspace membership. Use the
-Sites hosting platform's access policy controls for workspace-wide restrictions,
-or enforce explicit server-side membership or allowlist checks.
+The service worker uses a named shell cache. When changing cached shell behavior or assets, increment `CACHE` in `public/sw.js` so installed copies activate the new worker and discard the old shell.
 
-Use SIWC for account pages, user-specific dashboards, saved records, and write
-actions tied to the current ChatGPT user. Leave public content anonymous.
+The standalone UI uses both `(display-mode: standalone)` and the iOS `navigator.standalone` fallback. This keeps Home Screen-only safe-area, refresh, and status-bar behavior out of regular Safari.
 
-## Useful Commands
+## Deployment
 
-- `npm run dev`: start local development
-- `npm run build`: verify the vinext build output
-- `npm test`: build the starter and verify its rendered loading skeleton
-- `npm run db:generate`: generate Drizzle migrations after schema changes
+The production project is deployed on Vercel and served at `build.tomnguyen.co/get-fit/`.
 
-## Learn More
+From a Vercel-authenticated checkout linked to the correct project:
 
-- [vinext Documentation](https://github.com/cloudflare/vinext)
-- [Drizzle D1 Guide](https://orm.drizzle.team/docs/get-started/d1-new)
+```bash
+npx vercel --prod
+```
+
+The local `.vercel` directory is intentionally ignored because project linkage is machine-specific. Confirm the target project before deploying a fresh checkout.
+
+## Training-content note
+
+This repository reflects one person's clinician-guided return-to-sport plan. Exercise selection, pain rules, and weekly load should be reviewed with the relevant medical or rehabilitation professional before adapting it for someone else.

@@ -8,7 +8,7 @@ async function render() {
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("https://rebuild.example/get-fit", { headers: { accept: "text/html" } }),
+    new Request("https://rebuild.example/get-fit/", { headers: { accept: "text/html" } }),
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -60,6 +60,16 @@ test("contains the complete local-first training and offline flows", async () =>
 
   assert.match(app, /localStorage\.setItem/);
   assert.match(app, /navigator\.serviceWorker\.register/);
+  assert.match(app, /matchMedia\("\(display-mode: standalone\)"\)/);
+  assert.match(app, /classList\.toggle\("standalone-app", standalone\)/);
+  assert.match(app, /window\.addEventListener\("touchmove"/);
+  assert.match(app, /window\.location\.reload\(\)/);
+  assert.match(app, /Release to refresh/);
+  assert.match(app, /navigator\.vibrate\(10\)/);
+  assert.match(app, /switch: ""/);
+  assert.match(app, /className="refresh-spinner"/);
+  assert.match(app, /showStatusScrim/);
+  assert.match(app, /window\.addEventListener\("scroll", onScroll/);
   assert.match(app, /setTimer\(\{ exercise: exercise\.name/);
   assert.match(app, /type="checkbox"/);
   assert.match(app, /type="range"/);
@@ -82,6 +92,13 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /relativeWeekLabel\(weekOffset\)/);
   assert.match(app, /setSelectedWeekOffset\(offset\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
+  assert.match(styles, /@media \(display-mode: standalone\)/);
+  assert.match(styles, /padding-top: env\(safe-area-inset-top\)/);
+  assert.match(styles, /\.pull-refresh\.refreshing/);
+  assert.match(styles, /@keyframes refreshSpin/);
+  assert.match(styles, /\.status-bar-scrim\.visible/);
+  assert.match(styles, /backdrop-filter: blur\(18px\)/);
+  assert.match(styles, /html\.standalone-app \.pull-refresh/);
   assert.doesNotMatch(data, /id: "dr-joe-a"/);
   assert.match(data, /id: "gym-a"/);
   assert.doesNotMatch(data, /id: "dr-joe-b"/);
@@ -99,10 +116,12 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /15 min · easy nasal-breathing pace/);
 
   assert.equal(manifest.display, "standalone");
-  assert.equal(manifest.start_url, "/get-fit");
+  assert.equal(manifest.start_url, "/get-fit/");
   assert.equal(manifest.scope, "/get-fit/");
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
+  assert.match(serviceWorker, /rebuild-shell-v7/);
+  assert.match(serviceWorker, /client\.navigate\(client\.url\)/);
 });
