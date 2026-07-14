@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { drJoeLibrary, Exercise, LibraryExercise, workouts, weekRules } from "./training-data";
 
 type Tab = "today" | "week" | "library" | "history";
@@ -158,6 +158,14 @@ export function TrainingApp() {
   const [timer, setTimer] = useState<{ exercise: string; remaining: number; total: number } | null>(null);
   const [showFinish, setShowFinish] = useState(false);
   const [rpe, setRpe] = useState(6);
+  const [pullDistance, setPullDistance] = useState(0);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [showStatusScrim, setShowStatusScrim] = useState(false);
+  const pullStart = useRef<number | null>(null);
+  const pullAmount = useRef(0);
+  const canPull = useRef(false);
+  const hapticFired = useRef(false);
+  const hapticLabel = useRef<HTMLLabelElement | null>(null);
 
   const workout = workouts[selectedDay];
   const workoutDate = dateForWeekday(workout.weekday, selectedWeekOffset);
@@ -174,7 +182,7 @@ export function TrainingApp() {
       } catch { /* Keep the app usable if storage is unavailable. */ }
       setHydrated(true);
     }, 0);
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/get-fit/sw.js").catch(() => undefined);
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/get-fit/sw.js", { scope: "/get-fit/" }).catch(() => undefined);
     return () => window.clearTimeout(hydrate);
   }, []);
 
@@ -182,6 +190,75 @@ export function TrainingApp() {
     if (!hydrated) return;
     localStorage.setItem(STORAGE_KEY, JSON.stringify(saved));
   }, [saved, hydrated]);
+
+  useEffect(() => {
+    const standalone = window.matchMedia("(display-mode: standalone)").matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+    document.documentElement.classList.toggle("standalone-app", standalone);
+    if (!standalone) return;
+
+    const refreshThreshold = 72;
+    const onScroll = () => setShowStatusScrim(window.scrollY > 2);
+    const triggerHaptic = () => {
+      if ("vibrate" in navigator && navigator.vibrate(10)) return;
+      hapticLabel.current?.click();
+    };
+    const resetPull = () => {
+      pullStart.current = null;
+      pullAmount.current = 0;
+      canPull.current = false;
+      hapticFired.current = false;
+      setPullDistance(0);
+    };
+    const onTouchStart = (event: TouchEvent) => {
+      canPull.current = window.scrollY <= 0 && event.touches.length === 1;
+      pullStart.current = canPull.current ? event.touches[0].clientY : null;
+      hapticFired.current = false;
+    };
+    const onTouchMove = (event: TouchEvent) => {
+      if (!canPull.current || pullStart.current === null || window.scrollY > 0) return;
+      const delta = event.touches[0].clientY - pullStart.current;
+      if (delta <= 0) {
+        pullAmount.current = 0;
+        setPullDistance(0);
+        return;
+      }
+      if (event.cancelable) event.preventDefault();
+      const distance = Math.min(104, delta * 0.5);
+      pullAmount.current = distance;
+      setPullDistance(distance);
+      if (distance >= refreshThreshold && !hapticFired.current) {
+        hapticFired.current = true;
+        triggerHaptic();
+      }
+    };
+    const onTouchEnd = () => {
+      if (!canPull.current) return;
+      if (pullAmount.current >= refreshThreshold) {
+        pullStart.current = null;
+        canPull.current = false;
+        setPullDistance(refreshThreshold);
+        setIsRefreshing(true);
+        window.setTimeout(() => window.location.reload(), 450);
+        return;
+      }
+      resetPull();
+    };
+
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+    window.addEventListener("touchcancel", resetPull, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => {
+      document.documentElement.classList.remove("standalone-app");
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
+      window.removeEventListener("touchcancel", resetPull);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
 
   useEffect(() => {
     if (!timer || timer.remaining <= 0) return;
@@ -236,9 +313,35 @@ export function TrainingApp() {
   const averageRpe = recent.length ? (recent.reduce((sum, item) => sum + item.rpe, 0) / recent.length).toFixed(1) : "—";
   const visibleWeekStart = weekStartForOffset(weekOffset);
   const topbarDate = activeTab === "week" ? visibleWeekStart : activeTab === "today" ? workoutDate : new Date();
+  const pullProgress = Math.min(100, (pullDistance / 72) * 100);
 
   return (
     <main className="app-shell">
+      <div className={`status-bar-scrim${showStatusScrim ? " visible" : ""}`} aria-hidden="true" />
+      <div
+        className={`pull-refresh${pullDistance > 0 || isRefreshing ? " visible" : ""}${pullDistance >= 72 ? " armed" : ""}${isRefreshing ? " refreshing" : ""}`}
+        style={{ transform: `translate(-50%, ${Math.min(pullDistance, 72) - 72}px)` }}
+        role="status"
+        aria-live="polite"
+      >
+        <svg className="refresh-spinner" viewBox="0 0 18 18" aria-hidden="true">
+          <circle className="refresh-track" cx="9" cy="9" r="7" pathLength="100" />
+          <circle
+            className="refresh-progress"
+            cx="9"
+            cy="9"
+            r="7"
+            pathLength="100"
+            strokeDasharray={isRefreshing ? "72 28" : "100 0"}
+            strokeDashoffset={isRefreshing ? 0 : 100 - pullProgress}
+          />
+        </svg>
+        {isRefreshing ? "Refreshing…" : pullDistance >= 72 ? "Release to refresh" : "Pull to refresh"}
+      </div>
+      <div className="haptic-trigger" aria-hidden="true">
+        <input id="refresh-haptic" type="checkbox" tabIndex={-1} {...{ switch: "" }} />
+        <label ref={hapticLabel} htmlFor="refresh-haptic">Refresh threshold</label>
+      </div>
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
       <header className="topbar">

@@ -23,6 +23,26 @@ button, a { -webkit-tap-highlight-color: transparent; }
 button { color: inherit; }
 
 .app-shell { min-height: 100dvh; max-width: 620px; margin: 0 auto; position: relative; overflow: hidden; padding: 0 18px calc(104px + env(safe-area-inset-bottom)); }
+@media (display-mode: standalone) {
+  .app-shell { padding-top: env(safe-area-inset-top); }
+  .pull-refresh { display: flex; }
+  .status-bar-scrim { display: block; }
+}
+html.standalone-app .app-shell { padding-top: env(safe-area-inset-top); }
+html.standalone-app .pull-refresh { display: flex; }
+html.standalone-app .status-bar-scrim { display: block; }
+.status-bar-scrim { display: none; position: fixed; z-index: 25; top: 0; left: 50%; width: min(620px,100%); height: calc(env(safe-area-inset-top) + 20px); transform: translateX(-50%); pointer-events: none; opacity: 0; background: linear-gradient(to bottom, rgba(243,241,233,.96) 0%, rgba(243,241,233,.84) 68%, rgba(243,241,233,0) 100%); -webkit-backdrop-filter: blur(18px) saturate(1.15); backdrop-filter: blur(18px) saturate(1.15); -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%); mask-image: linear-gradient(to bottom, #000 0%, #000 68%, transparent 100%); transition: opacity .16s ease; }
+.status-bar-scrim.visible { opacity: 1; }
+.pull-refresh { display: none; position: fixed; z-index: 30; top: calc(env(safe-area-inset-top) + 8px); left: 50%; align-items: center; gap: 7px; min-height: 35px; padding: 0 13px; border: 1px solid rgba(255,255,255,.7); border-radius: 999px; background: rgba(20,34,28,.92); color: white; box-shadow: 0 8px 24px rgba(20,34,28,.2); opacity: 0; pointer-events: none; font-size: 10px; font-weight: 680; white-space: nowrap; transition: opacity .12s ease, transform .08s linear; }
+.pull-refresh.visible { opacity: 1; }
+.refresh-spinner { width: 18px; height: 18px; overflow: visible; transform: rotate(-90deg); }
+.refresh-spinner circle { fill: none; stroke-width: 2.2; }
+.refresh-track { stroke: rgba(255,255,255,.22); }
+.refresh-progress { stroke: var(--lime); stroke-linecap: round; transition: stroke-dashoffset .06s linear; }
+.pull-refresh.refreshing .refresh-spinner { animation: refreshSpin .7s linear infinite; }
+@keyframes refreshSpin { from { transform: rotate(-90deg); } to { transform: rotate(270deg); } }
+.haptic-trigger { position: fixed; width: 1px; height: 1px; left: -10px; top: -10px; opacity: .001; overflow: hidden; pointer-events: none; }
+.haptic-trigger input, .haptic-trigger label { position: absolute; width: 1px; height: 1px; }
 .ambient { position: fixed; border-radius: 999px; filter: blur(80px); opacity: .3; pointer-events: none; }
 .ambient-one { width: 250px; height: 250px; background: #c9ff58; top: -100px; right: -90px; }
 .ambient-two { width: 180px; height: 180px; background: #b5d9c5; top: 50%; left: -120px; }
