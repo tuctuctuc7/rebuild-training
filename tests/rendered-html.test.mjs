@@ -99,6 +99,8 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(styles, /\.status-bar-scrim\.visible/);
   assert.match(styles, /backdrop-filter: blur\(18px\)/);
   assert.match(styles, /html\.standalone-app \.pull-refresh/);
+  assert.match(styles, /\.progress-ring[^}]*flex: 0 0 47px/);
+  assert.match(styles, /\.progress-ring[^}]*aspect-ratio: 1/);
   assert.doesNotMatch(data, /id: "dr-joe-a"/);
   assert.match(data, /id: "gym-a"/);
   assert.doesNotMatch(data, /id: "dr-joe-b"/);
