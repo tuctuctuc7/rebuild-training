@@ -82,11 +82,21 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /relativeWeekLabel\(weekOffset\)/);
   assert.match(app, /setSelectedWeekOffset\(offset\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
-  assert.match(data, /id: "dr-joe-a"/);
+  assert.doesNotMatch(data, /id: "dr-joe-a"/);
   assert.match(data, /id: "gym-a"/);
-  assert.match(data, /id: "dr-joe-b"/);
+  assert.doesNotMatch(data, /id: "dr-joe-b"/);
   assert.match(data, /id: "gym-b"/);
   assert.match(data, /id: "tennis-moderate-b",\s+weekday: 4/);
+
+  assert.match(data, /dailyDrJoeWarmup/);
+  assert.match(data, /warmup: dailyDrJoeWarmup/g);
+  assert.equal((data.match(/warmup: dailyDrJoeWarmup/g) ?? []).length, 7);
+  assert.match(app, /DAILY DR\. JOE WARM-UP/);
+  assert.match(app, /Done before tennis, gym, recovery, or rest/);
+  assert.match(data, /Hanging leg raises/);
+  assert.match(data, /2 sets × 15 reps · bodyweight/);
+  assert.match(data, /Incline treadmill walk/);
+  assert.match(data, /15 min · easy nasal-breathing pace/);
 
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.start_url, "/get-fit");

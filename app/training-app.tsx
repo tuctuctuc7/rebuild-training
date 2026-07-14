@@ -24,6 +24,7 @@ type SavedState = {
 };
 
 const STORAGE_KEY = "rebuild-training-v1";
+const EMPTY_EXERCISES: Exercise[] = [];
 const defaultState: SavedState = { checkIns: {}, progress: {}, history: [] };
 
 function dateKey(date = new Date()) {
@@ -189,11 +190,21 @@ export function TrainingApp() {
     return () => window.clearInterval(id);
   }, [timer]);
 
-  const totals = useMemo(() => {
+  const warmup = workout.warmup ?? EMPTY_EXERCISES;
+  const warmupTotals = useMemo(() => {
+    const total = warmup.reduce((sum, exercise) => sum + exercise.sets, 0);
+    const completed = warmup.reduce((sum, exercise) => sum + (workoutProgress[exercise.id] ?? []).filter(Boolean).length, 0);
+    return { total, completed };
+  }, [warmup, workoutProgress]);
+  const sessionTotals = useMemo(() => {
     const total = workout.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
     const completed = workout.exercises.reduce((sum, exercise) => sum + (workoutProgress[exercise.id] ?? []).filter(Boolean).length, 0);
     return { total, completed };
-  }, [workout, workoutProgress]);
+  }, [workout.exercises, workoutProgress]);
+  const totals = useMemo(() => ({
+    total: warmupTotals.total + sessionTotals.total,
+    completed: warmupTotals.completed + sessionTotals.completed,
+  }), [sessionTotals, warmupTotals]);
 
   function updateCheckIn(field: keyof CheckIn, value: number) {
     setSaved((current) => ({ ...current, checkIns: { ...current.checkIns, [key]: { ...checkIn, [field]: value } } }));
@@ -281,11 +292,23 @@ export function TrainingApp() {
             </div>
           </section>
 
+          {warmup.length > 0 && (
+            <section className="exercise-section warmup-section">
+              <div className="section-title exercise-title">
+                <div><p className="eyebrow">DAILY DR. JOE WARM-UP</p><h3>{warmupTotals.completed}/{warmupTotals.total} sets complete</h3><p>Done before tennis, gym, recovery, or rest. Session 01 + Session 02 every day.</p></div>
+                <div className="progress-ring" style={{ "--progress": `${warmupTotals.total ? (warmupTotals.completed / warmupTotals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{warmupTotals.total ? Math.round((warmupTotals.completed / warmupTotals.total) * 100) : 0}%</span></div>
+              </div>
+              <div className="exercise-list">
+                {warmup.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel="Watch Dr. Joe demo" />)}
+              </div>
+            </section>
+          )}
+
           {workout.exercises.length > 0 ? (
             <section className="exercise-section">
               <div className="section-title exercise-title">
-                <div><p className="eyebrow">{workout.id.startsWith("dr-joe") ? "DR. JOE SERIES" : "GYM SESSION"}</p><h3>{totals.completed}/{totals.total} sets complete</h3></div>
-                <div className="progress-ring" style={{ "--progress": `${totals.total ? (totals.completed / totals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{totals.total ? Math.round((totals.completed / totals.total) * 100) : 0}%</span></div>
+                <div><p className="eyebrow">{workout.id.startsWith("dr-joe") ? "DR. JOE EXTRA" : "GYM SESSION"}</p><h3>{sessionTotals.completed}/{sessionTotals.total} sets complete</h3></div>
+                <div className="progress-ring" style={{ "--progress": `${sessionTotals.total ? (sessionTotals.completed / sessionTotals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{sessionTotals.total ? Math.round((sessionTotals.completed / sessionTotals.total) * 100) : 0}%</span></div>
               </div>
               <div className="exercise-list">
                 {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel={workout.id.startsWith("gym-") ? "Watch video demo" : "Watch Dr. Joe demo"} />)}
@@ -301,14 +324,14 @@ export function TrainingApp() {
               <button className="finish-button" onClick={() => setShowFinish(true)}>Finish tennis <span>→</span></button>
             </section>
           ) : (
-            <section className="rest-card"><div className="rest-sun" aria-hidden="true" /><h3>Recovery is the work today.</h3><p>Leave the checklist empty. Your next planned session is Monday tennis.</p></section>
+            <section className="rest-card"><div className="rest-sun" aria-hidden="true" /><h3>{workout.type === "recovery" ? "Warm-up is the session today." : "Recovery is the work today."}</h3><p>{workout.type === "recovery" ? "Complete the full Dr. Joe warm-up gently, then stop while it still feels like activation." : "Complete the Dr. Joe warm-up gently, then keep the rest of the day restorative."}</p></section>
           )}
         </section>
       )}
 
       {activeTab === "week" && (
         <section className="screen week-screen">
-          <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Tennis runs Monday, Wednesday and Friday. Dr. Joe and gym remain separate sessions.</p></div>
+          <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Tennis runs Monday, Wednesday and Friday. The full Dr. Joe Session 01 + Session 02 warm-up happens every day before the main work.</p></div>
           <div className="week-switcher" aria-label="Choose week">
             <button onClick={() => setWeekOffset((value) => value - 1)} aria-label="Previous week">←</button>
             <div><strong>{relativeWeekLabel(weekOffset)}</strong><small>{formatWeekRange(visibleWeekStart)}</small></div>
