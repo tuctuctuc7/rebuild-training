@@ -1,6 +1,6 @@
-const CACHE = "rebuild-shell-v3";
+const CACHE = "rebuild-shell-v4";
 const APP_ROOT = "/get-fit";
-const CORE = [APP_ROOT, `${APP_ROOT}/manifest.webmanifest`, `${APP_ROOT}/icon-192.png`, `${APP_ROOT}/icon-512.png`];
+const CORE = [APP_ROOT, `${APP_ROOT}/manifest.webmanifest`, `${APP_ROOT}/icon-192.png`, `${APP_ROOT}/icon-512.png`, `${APP_ROOT}/rebuild-header.png`];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE)).then(() => self.skipWaiting()));

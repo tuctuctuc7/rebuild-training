@@ -33,6 +33,11 @@ button { color: inherit; }
 .eyebrow { font: 700 10px/1 var(--font-geist-mono), monospace; letter-spacing: .14em; margin: 0 0 6px; color: var(--muted); }
 .week-chip { margin-left: auto; border: 1px solid var(--line); border-radius: 99px; padding: 7px 10px; font: 650 12px/1 var(--font-geist-mono), monospace; background: rgba(255,255,255,.45); }
 .week-chip span { color: var(--muted); font-size: 9px; margin-right: 2px; }
+.hero-art { min-height: 178px; margin: 0 0 27px; border-radius: 25px; overflow: hidden; position: relative; display: flex; align-items: flex-end; padding: 19px; background: linear-gradient(90deg, rgba(10,28,20,.84) 0%, rgba(10,28,20,.2) 58%, transparent 100%), url('/get-fit/rebuild-header.png') 66% 55% / cover; box-shadow: 0 18px 42px rgba(25,45,35,.16); }
+.hero-art::after { content: ""; position: absolute; inset: 0; border: 1px solid rgba(255,255,255,.28); border-radius: inherit; pointer-events: none; }
+.hero-art > div { position: relative; z-index: 1; color: white; display: flex; flex-direction: column; gap: 7px; }
+.hero-art span { color: var(--lime); font: 700 9px/1 var(--font-geist-mono), monospace; letter-spacing: .15em; }
+.hero-art strong { max-width: 190px; font-size: 24px; line-height: .96; letter-spacing: -.05em; text-shadow: 0 2px 18px rgba(0,0,0,.24); }
 .screen { position: relative; z-index: 1; animation: appear .35s ease both; }
 @keyframes appear { from { opacity: 0; transform: translateY(5px); } }
 .back-today { border: 0; background: transparent; padding: 0; margin: 0 0 15px; color: var(--green); font-size: 13px; font-weight: 650; }
@@ -100,6 +105,15 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .rest-card h3 { font-size: 20px; margin: 15px 0 7px; }
 .rest-card p { font-size: 13px; line-height: 1.5; color: var(--muted); margin: 0; }
 .rest-sun { width: 48px; height: 48px; margin: 0 auto; border-radius: 50%; background: var(--lime); box-shadow: 0 0 0 10px rgba(201,255,88,.18); }
+.court-card { margin-top: 24px; padding: 24px; border-radius: 24px; position: relative; overflow: hidden; color: white; background: var(--green); box-shadow: 0 16px 40px rgba(31,75,54,.18); }
+.court-card .eyebrow { color: var(--lime); }
+.court-card h3 { position: relative; z-index: 1; margin: 0 0 8px; font-size: 22px; letter-spacing: -.04em; }
+.court-card > p:not(.eyebrow) { position: relative; z-index: 1; max-width: 390px; margin: 0; color: rgba(255,255,255,.72); font-size: 12px; line-height: 1.5; }
+.court-card .finish-button { position: relative; z-index: 1; background: white; color: var(--ink); box-shadow: none; }
+.court-lines { position: absolute; width: 180px; height: 130px; right: -38px; top: -24px; border: 1px solid rgba(255,255,255,.18); transform: rotate(-8deg); }
+.court-lines::before, .court-lines::after { content: ""; position: absolute; background: rgba(255,255,255,.18); }
+.court-lines::before { width: 1px; height: 100%; left: 50%; }
+.court-lines::after { height: 1px; width: 100%; top: 50%; }
 
 .page-heading { padding: 5px 0 25px; }
 .page-heading h2 { max-width: 360px; }

@@ -30,9 +30,30 @@ function dateKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
 
-function dayIndex() {
-  const day = new Date().getDay();
+function weekdayIndex(date = new Date()) {
+  const day = date.getDay();
   return day === 0 ? 6 : day - 1;
+}
+
+function startOfWeek(date = new Date()) {
+  const start = new Date(date);
+  start.setHours(12, 0, 0, 0);
+  start.setDate(start.getDate() - weekdayIndex(start));
+  return start;
+}
+
+function dateForWeekday(weekday: number) {
+  const date = startOfWeek();
+  date.setDate(date.getDate() + weekday);
+  return date;
+}
+
+function isoWeekNumber(date = new Date()) {
+  const target = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+  const day = target.getUTCDay() || 7;
+  target.setUTCDate(target.getUTCDate() + 4 - day);
+  const yearStart = new Date(Date.UTC(target.getUTCFullYear(), 0, 1));
+  return Math.ceil((((target.getTime() - yearStart.getTime()) / 86400000) + 1) / 7);
 }
 
 function readiness(energy: number, pain: number) {
@@ -81,7 +102,8 @@ function ExerciseCard({ exercise, checks, onCheck }: { exercise: Exercise; check
 }
 
 export function TrainingApp() {
-  const todayIndex = dayIndex();
+  const todayWeekday = weekdayIndex();
+  const todayIndex = Math.max(0, workouts.findIndex((item) => item.weekday === todayWeekday));
   const [activeTab, setActiveTab] = useState<Tab>("today");
   const [selectedDay, setSelectedDay] = useState(todayIndex);
   const [saved, setSaved] = useState<SavedState>(defaultState);
@@ -91,7 +113,8 @@ export function TrainingApp() {
   const [rpe, setRpe] = useState(6);
 
   const workout = workouts[selectedDay];
-  const key = `${dateKey()}:${workout.id}`;
+  const workoutDate = dateForWeekday(workout.weekday);
+  const key = `${dateKey(workoutDate)}:${workout.id}`;
   const checkIn = saved.checkIns[key] ?? { energy: 3, pain: 1 };
   const recommendation = readiness(checkIn.energy, checkIn.pain);
   const workoutProgress = useMemo(() => saved.progress[key] ?? {}, [saved.progress, key]);
@@ -171,8 +194,12 @@ export function TrainingApp() {
       <header className="topbar">
         <div className="brand-mark" aria-hidden="true"><span /></div>
         <div><p className="eyebrow">REBUILD</p><h1>Return athletic.</h1></div>
-        <div className="week-chip"><span>WK</span> 01</div>
+        <div className="week-chip"><span>WK</span> {String(isoWeekNumber()).padStart(2, "0")}</div>
       </header>
+
+      <div className="hero-art" role="img" aria-label="Tennis player returning to court at sunrise">
+        <div><span>BUILD CAPACITY</span><strong>Move well.<br />Recover better.</strong></div>
+      </div>
 
       {activeTab === "today" && (
         <section className="screen today-screen">
@@ -182,7 +209,7 @@ export function TrainingApp() {
               <p className="eyebrow">{selectedDay === todayIndex ? "TODAY" : workout.day.toUpperCase()}</p>
               <h2>{workout.title}</h2>
             </div>
-            <div className={`type-orb ${workout.type}`} aria-hidden="true"><span>{workout.type === "tennis" ? "T" : workout.type === "strength" ? "S" : workout.type === "recovery" ? "R" : "·"}</span></div>
+            <div className={`type-orb ${workout.type}`} aria-hidden="true"><span>{workout.type === "tennis" ? "T" : workout.type === "strength" ? "G" : workout.type === "recovery" ? "J" : "·"}</span></div>
           </div>
           <div className="session-facts"><span>{workout.duration}</span><i /><span>{workout.intensity}</span></div>
           <p className="session-note">{workout.note}</p>
@@ -207,13 +234,21 @@ export function TrainingApp() {
           {workout.exercises.length > 0 ? (
             <section className="exercise-section">
               <div className="section-title exercise-title">
-                <div><p className="eyebrow">{workout.type === "tennis" ? "8-MIN PRIMER" : "SESSION"}</p><h3>{totals.completed}/{totals.total} sets complete</h3></div>
+                <div><p className="eyebrow">{workout.id.startsWith("dr-joe") ? "DR. JOE SERIES" : "GYM SESSION"}</p><h3>{totals.completed}/{totals.total} sets complete</h3></div>
                 <div className="progress-ring" style={{ "--progress": `${totals.total ? (totals.completed / totals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{totals.total ? Math.round((totals.completed / totals.total) * 100) : 0}%</span></div>
               </div>
               <div className="exercise-list">
                 {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} />)}
               </div>
               <button className="finish-button" onClick={() => setShowFinish(true)}>Finish session <span>→</span></button>
+            </section>
+          ) : workout.type === "tennis" ? (
+            <section className="court-card">
+              <div className="court-lines" aria-hidden="true" />
+              <p className="eyebrow">COURT SESSION</p>
+              <h3>Keep the quality high.</h3>
+              <p>Log your energy, pain and whole-session RPE. The target is to finish with something left.</p>
+              <button className="finish-button" onClick={() => setShowFinish(true)}>Finish tennis <span>→</span></button>
             </section>
           ) : (
             <section className="rest-card"><div className="rest-sun" aria-hidden="true" /><h3>Recovery is the work today.</h3><p>Leave the checklist empty. Your next planned session is Monday tennis.</p></section>
@@ -223,11 +258,11 @@ export function TrainingApp() {
 
       {activeTab === "week" && (
         <section className="screen week-screen">
-          <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Two strength days support tennis. One court session stays deliberately light.</p></div>
+          <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Tennis runs Monday, Wednesday and Friday. Dr. Joe and gym remain separate sessions.</p></div>
           <div className="week-list">
             {workouts.map((item, index) => (
-              <button key={item.id} className={`week-card ${index === todayIndex ? "is-today" : ""}`} onClick={() => selectWorkout(index)}>
-                <span className="day-tile"><small>{item.shortDay}</small><strong>{index === todayIndex ? "NOW" : String(index + 1).padStart(2, "0")}</strong></span>
+              <button key={item.id} className={`week-card ${item.weekday === todayWeekday ? "is-today" : ""}`} onClick={() => selectWorkout(index)}>
+                <span className="day-tile"><small>{item.shortDay}</small><strong>{dateForWeekday(item.weekday).getDate()}</strong></span>
                 <span className="week-copy"><strong>{item.title}</strong><small>{item.duration} · {item.intensity}</small></span>
                 <span className={`week-type ${item.type}`} aria-hidden="true" />
               </button>
@@ -242,7 +277,7 @@ export function TrainingApp() {
           <div className="page-heading"><p className="eyebrow">LOAD MEMORY</p><h2>Notice the pattern.</h2><p>The goal is more usable energy—not simply more completed work.</p></div>
           <div className="stat-grid"><div><span>{saved.history.length}</span><small>Sessions</small></div><div><span>{averageRpe}</span><small>Avg RPE</small></div><div><span>{recent.length ? recent[0].pain : "—"}</span><small>Last pain</small></div></div>
           {recent.length ? <div className="history-list">{recent.map((item) => <article className="history-card" key={item.id}>
-            <div className={`history-signal ${item.recommendation}`} /><div className="history-main"><strong>{item.title}</strong><small>{new Intl.DateTimeFormat("en", { weekday: "short", month: "short", day: "numeric" }).format(new Date(item.date))}</small></div><div className="history-score"><strong>{item.completed}/{item.total}</strong><small>sets</small></div><div className="history-score"><strong>{item.rpe}</strong><small>RPE</small></div>
+            <div className={`history-signal ${item.recommendation}`} /><div className="history-main"><strong>{item.title}</strong><small>{new Intl.DateTimeFormat("en", { weekday: "short", month: "short", day: "numeric" }).format(new Date(item.date))}</small></div><div className="history-score"><strong>{item.total ? `${item.completed}/${item.total}` : "—"}</strong><small>{item.total ? "sets" : "court"}</small></div><div className="history-score"><strong>{item.rpe}</strong><small>RPE</small></div>
           </article>)}</div> : <div className="empty-history"><span aria-hidden="true">↗</span><h3>Your trend starts today.</h3><p>Finish a session to save its load, pain and energy here.</p></div>}
           <section className="safety-note"><strong>Morning-after rule</strong><p>Progress only when pain is 0–2/10, your gait is normal, and energy and stiffness return to baseline by the next morning.</p></section>
         </section>
@@ -262,7 +297,7 @@ export function TrainingApp() {
             <div className="rpe-value"><strong>{rpe}</strong><span>/10 RPE</span></div>
             <input aria-label="Session RPE" className="rpe-slider" type="range" min="1" max="10" value={rpe} onChange={(event) => setRpe(Number(event.target.value))} />
             <div className="rpe-labels"><span>Very easy</span><span>Maximum</span></div>
-            <div className="finish-summary"><span>{totals.completed}/{totals.total} sets</span><span>Energy {checkIn.energy}/5</span><span>Pain {checkIn.pain}/10</span></div>
+            <div className="finish-summary"><span>{totals.total ? `${totals.completed}/${totals.total} sets` : "Court session"}</span><span>Energy {checkIn.energy}/5</span><span>Pain {checkIn.pain}/10</span></div>
             <button className="finish-button" onClick={saveSession}>Save to history <span>→</span></button>
           </div>
         </div>

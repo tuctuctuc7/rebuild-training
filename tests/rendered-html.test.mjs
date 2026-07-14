@@ -36,9 +36,10 @@ test("server-renders the finished training app and metadata", async () => {
 });
 
 test("contains the complete local-first training and offline flows", async () => {
-  const [app, data, manifestText, serviceWorker] = await Promise.all([
+  const [app, data, styles, manifestText, serviceWorker] = await Promise.all([
     readFile(new URL("../app/training-app.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/training-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../public/manifest.webmanifest", import.meta.url), "utf8"),
     readFile(new URL("../public/sw.js", import.meta.url), "utf8"),
   ]);
@@ -61,6 +62,13 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Recovery only/);
   assert.match(app, /Reduce by 30–50%/);
   assert.match(app, /Save to history/);
+  assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
+  assert.match(styles, /rebuild-header\.png/);
+  assert.match(data, /id: "dr-joe-a"/);
+  assert.match(data, /id: "gym-a"/);
+  assert.match(data, /id: "dr-joe-b"/);
+  assert.match(data, /id: "gym-b"/);
+  assert.match(data, /id: "tennis-moderate-b",\s+weekday: 4/);
 
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.start_url, "/get-fit");
@@ -68,4 +76,5 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
+  assert.match(serviceWorker, /rebuild-header\.png/);
 });
