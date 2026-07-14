@@ -1,5 +1,6 @@
-const CACHE = "rebuild-shell-v2";
-const CORE = ["/", "/manifest.webmanifest", "/icon-192.png", "/icon-512.png"];
+const CACHE = "rebuild-shell-v3";
+const APP_ROOT = "/get-fit";
+const CORE = [APP_ROOT, `${APP_ROOT}/manifest.webmanifest`, `${APP_ROOT}/icon-192.png`, `${APP_ROOT}/icon-512.png`];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(CORE)).then(() => self.skipWaiting()));
@@ -17,5 +18,5 @@ self.addEventListener("fetch", (event) => {
       caches.open(CACHE).then((cache) => cache.put(event.request, copy));
     }
     return response;
-  }).catch(() => caches.match(event.request).then((cached) => cached || (event.request.mode === "navigate" ? caches.match("/") : undefined))));
+  }).catch(() => caches.match(event.request).then((cached) => cached || (event.request.mode === "navigate" ? caches.match(APP_ROOT) : undefined))));
 });

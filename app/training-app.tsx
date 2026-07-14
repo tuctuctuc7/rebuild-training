@@ -104,7 +104,7 @@ export function TrainingApp() {
       } catch { /* Keep the app usable if storage is unavailable. */ }
       setHydrated(true);
     }, 0);
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(() => undefined);
+    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/get-fit/sw.js").catch(() => undefined);
     return () => window.clearTimeout(hydrate);
   }, []);
 

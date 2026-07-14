@@ -8,7 +8,7 @@ async function render() {
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("https://rebuild.example/", { headers: { accept: "text/html" } }),
+    new Request("https://rebuild.example/get-fit", { headers: { accept: "text/html" } }),
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
@@ -29,9 +29,9 @@ test("server-renders the finished training app and metadata", async () => {
   assert.match(html, /Today/);
   assert.match(html, /Week/);
   assert.match(html, /History/);
-  assert.match(html, /rel="manifest" href="https:\/\/tomnguyen\.co\/manifest\.webmanifest"/);
-  assert.match(html, /rel="icon" href="https:\/\/tomnguyen\.co\/icon-192\.png"/);
-  assert.match(html, /property="og:image" content="https:\/\/tomnguyen\.co\/og\.png"/);
+  assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
+  assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
+  assert.match(html, /property="og:image" content="https:\/\/build\.tomnguyen\.co\/get-fit\/og\.png"/);
   assert.doesNotMatch(html, /codex-preview|taking shape|SkeletonPreview|react-loading-skeleton/i);
 });
 
@@ -63,7 +63,8 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Save to history/);
 
   assert.equal(manifest.display, "standalone");
-  assert.equal(manifest.start_url, "/");
+  assert.equal(manifest.start_url, "/get-fit");
+  assert.equal(manifest.scope, "/get-fit/");
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
