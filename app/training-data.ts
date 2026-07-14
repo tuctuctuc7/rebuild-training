@@ -135,9 +135,9 @@ export const workouts: Workout[] = [
     intensity: "RPE ≤ 6",
     note: "A separate session from Dr. Joe's routine. Leave four good reps available and never grind.",
     exercises: [
-      { id: "supported-row", name: "Supported row", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.nasm.org/resource-center/exercise-library/seated-machine-row-close-grip", cues: ["Support the torso", "Keep ribs stacked", "Finish with two clean reps in reserve—minimum"] },
-      { id: "chest-press", name: "Chest press", prescription: "6–8 reps", sets: 2, restSeconds: 75, video: "https://www.nasm.org/resource-center/exercise-library/chest-press-machine", cues: ["Stay comfortable through the back", "Smooth tempo", "No grinding reps"] },
-      { id: "pallof", name: "Pallof press", prescription: "8 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://blog.nasm.org/progressive-core-training", cues: ["Keep the pelvis square", "Exhale as the hands move away", "Resist rotation"] },
+      { id: "supported-row", name: "Supported row", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=k0cTJCfxa0Y", cues: ["Support the torso", "Keep ribs stacked", "Finish with two clean reps in reserve—minimum"] },
+      { id: "chest-press", name: "Chest press", prescription: "6–8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=lRo9zZ7EwpM", cues: ["Stay comfortable through the back", "Smooth tempo", "No grinding reps"] },
+      { id: "pallof", name: "Pallof press", prescription: "8 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://www.youtube.com/watch?v=axgv7H_VQOo", cues: ["Keep the pelvis square", "Exhale as the hands move away", "Resist rotation"] },
     ],
   },
   {
@@ -194,9 +194,9 @@ export const workouts: Workout[] = [
     intensity: "RPE ≤ 6",
     note: "Keep this separate from Dr. Joe's session. No heavy pulls, jumping or sprinting in this phase.",
     exercises: [
-      { id: "lat-pulldown", name: "Lat pulldown", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://blog.nasm.org/biomechanics-of-the-lat-pulldown", cues: ["Keep ribs stacked", "Pull without leaning back", "Leave four good reps available"] },
-      { id: "incline-pushup", name: "Incline push-up", prescription: "8 reps", sets: 2, restSeconds: 60, video: "https://www.nasm.org/resource-center/exercise-library/incline-push-up", cues: ["Choose an easy height", "Move as one unit", "Keep the lower back comfortable"] },
-      { id: "pallof-b", name: "Pallof press", prescription: "8 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://blog.nasm.org/progressive-core-training", cues: ["Keep the pelvis square", "Exhale as the hands move away", "Resist rotation"] },
+      { id: "lat-pulldown", name: "Lat pulldown", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=CAwf7n6Luuc", cues: ["Keep ribs stacked", "Pull without leaning back", "Leave four good reps available"] },
+      { id: "incline-pushup", name: "Incline push-up", prescription: "8 reps", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=0JUrOH--Kdk", cues: ["Choose an easy height", "Move as one unit", "Keep the lower back comfortable"] },
+      { id: "pallof-b", name: "Pallof press", prescription: "8 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://www.youtube.com/watch?v=axgv7H_VQOo", cues: ["Keep the pelvis square", "Exhale as the hands move away", "Resist rotation"] },
     ],
   },
   {

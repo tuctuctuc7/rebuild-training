@@ -54,8 +54,7 @@ test("contains the complete local-first training and offline flows", async () =>
     "D9qjQWqVIlI", "39vuP5xozsI", "2971402579877027",
   ]) assert.match(data, new RegExp(link));
   for (const gymDemo of [
-    "seated-machine-row-close-grip", "chest-press-machine", "progressive-core-training",
-    "biomechanics-of-the-lat-pulldown", "incline-push-up",
+    "k0cTJCfxa0Y", "lRo9zZ7EwpM", "axgv7H_VQOo", "CAwf7n6Luuc", "0JUrOH--Kdk",
   ]) assert.match(data, new RegExp(gymDemo));
 
   assert.match(app, /localStorage\.setItem/);
@@ -66,7 +65,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Recovery only/);
   assert.match(app, /Reduce by 30–50%/);
   assert.match(app, /Save to history/);
-  assert.match(app, /View exercise demo/);
+  assert.match(app, /Watch video demo/);
   assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(data, /id: "dr-joe-a"/);
