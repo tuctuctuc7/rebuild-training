@@ -63,7 +63,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Reduce by 30–50%/);
   assert.match(app, /Save to history/);
   assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
-  assert.match(styles, /rebuild-header\.png/);
+  assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(data, /id: "dr-joe-a"/);
   assert.match(data, /id: "gym-a"/);
   assert.match(data, /id: "dr-joe-b"/);
@@ -76,5 +76,5 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.deepEqual(manifest.icons.map((icon) => icon.sizes), ["192x192", "512x512"]);
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
-  assert.match(serviceWorker, /rebuild-header\.png/);
+  assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
 });
