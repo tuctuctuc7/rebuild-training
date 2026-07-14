@@ -42,10 +42,32 @@ function startOfWeek(date = new Date()) {
   return start;
 }
 
-function dateForWeekday(weekday: number) {
+function dateForWeekday(weekday: number, weekOffset = 0) {
   const date = startOfWeek();
-  date.setDate(date.getDate() + weekday);
+  date.setDate(date.getDate() + weekday + (weekOffset * 7));
   return date;
+}
+
+function weekStartForOffset(weekOffset: number) {
+  const date = startOfWeek();
+  date.setDate(date.getDate() + (weekOffset * 7));
+  return date;
+}
+
+function relativeWeekLabel(weekOffset: number) {
+  if (weekOffset === 0) return "This week";
+  if (weekOffset === -1) return "Last week";
+  if (weekOffset === 1) return "Next week";
+  return weekOffset < 0 ? `${Math.abs(weekOffset)} weeks ago` : `In ${weekOffset} weeks`;
+}
+
+function formatWeekRange(start: Date) {
+  const end = new Date(start);
+  end.setDate(end.getDate() + 6);
+  const startMonth = new Intl.DateTimeFormat("en", { month: "short" }).format(start).toUpperCase();
+  const endMonth = new Intl.DateTimeFormat("en", { month: "short" }).format(end).toUpperCase();
+  const dates = startMonth === endMonth ? `${start.getDate()}–${end.getDate()} ${startMonth}` : `${start.getDate()} ${startMonth}–${end.getDate()} ${endMonth}`;
+  return `${dates} ${end.getFullYear()}`;
 }
 
 function isoWeekNumber(date = new Date()) {
@@ -129,6 +151,8 @@ export function TrainingApp() {
   const todayIndex = Math.max(0, workouts.findIndex((item) => item.weekday === todayWeekday));
   const [activeTab, setActiveTab] = useState<Tab>("today");
   const [selectedDay, setSelectedDay] = useState(todayIndex);
+  const [selectedWeekOffset, setSelectedWeekOffset] = useState(0);
+  const [weekOffset, setWeekOffset] = useState(0);
   const [saved, setSaved] = useState<SavedState>(defaultState);
   const [hydrated, setHydrated] = useState(false);
   const [timer, setTimer] = useState<{ exercise: string; remaining: number; total: number } | null>(null);
@@ -136,7 +160,7 @@ export function TrainingApp() {
   const [rpe, setRpe] = useState(6);
 
   const workout = workouts[selectedDay];
-  const workoutDate = dateForWeekday(workout.weekday);
+  const workoutDate = dateForWeekday(workout.weekday, selectedWeekOffset);
   const key = `${dateKey(workoutDate)}:${workout.id}`;
   const checkIn = saved.checkIns[key] ?? { energy: 3, pain: 1 };
   const recommendation = readiness(checkIn.energy, checkIn.pain);
@@ -185,10 +209,10 @@ export function TrainingApp() {
 
   function saveSession() {
     const session: Session = {
-      id: `${Date.now()}`,
+      id: `${workout.id}:${dateKey(workoutDate)}:${saved.history.length}`,
       workoutId: workout.id,
       title: workout.title,
-      date: new Date().toISOString(),
+      date: workoutDate.toISOString(),
       energy: checkIn.energy,
       pain: checkIn.pain,
       rpe,
@@ -201,14 +225,17 @@ export function TrainingApp() {
     setActiveTab("history");
   }
 
-  function selectWorkout(index: number) {
+  function selectWorkout(index: number, offset = weekOffset) {
     setSelectedDay(index);
+    setSelectedWeekOffset(offset);
     setActiveTab("today");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   const recent = saved.history.slice(0, 8);
   const averageRpe = recent.length ? (recent.reduce((sum, item) => sum + item.rpe, 0) / recent.length).toFixed(1) : "—";
+  const visibleWeekStart = weekStartForOffset(weekOffset);
+  const topbarDate = activeTab === "week" ? visibleWeekStart : activeTab === "today" ? workoutDate : new Date();
 
   return (
     <main className="app-shell">
@@ -217,7 +244,7 @@ export function TrainingApp() {
       <header className="topbar">
         <div className="brand-mark" aria-hidden="true"><span /></div>
         <div><p className="eyebrow">REBUILD</p><h1>Return athletic.</h1></div>
-        <div className="week-chip"><span>WK</span> {String(isoWeekNumber()).padStart(2, "0")}</div>
+        <div className="week-chip"><span>WK</span> {String(isoWeekNumber(topbarDate)).padStart(2, "0")}</div>
       </header>
 
       <div className="hero-art" role="img" aria-label="Tennis player returning to court at sunrise">
@@ -226,10 +253,10 @@ export function TrainingApp() {
 
       {activeTab === "today" && (
         <section className="screen today-screen">
-          {selectedDay !== todayIndex && <button className="back-today" onClick={() => setSelectedDay(todayIndex)}>← Back to today</button>}
+          {(selectedDay !== todayIndex || selectedWeekOffset !== 0) && <button className="back-today" onClick={() => { setSelectedDay(todayIndex); setSelectedWeekOffset(0); }}>← Back to today</button>}
           <div className="day-heading">
             <div>
-              <p className="eyebrow">{selectedDay === todayIndex ? "TODAY" : workout.day.toUpperCase()}</p>
+              <p className="eyebrow">{selectedDay === todayIndex && selectedWeekOffset === 0 ? "TODAY" : `${workout.day.toUpperCase()} · ${new Intl.DateTimeFormat("en", { month: "short", day: "numeric" }).format(workoutDate).toUpperCase()}`}</p>
               <h2>{workout.title}</h2>
             </div>
             <div className={`type-orb ${workout.type}`} aria-hidden="true"><span>{workout.type === "tennis" ? "T" : workout.type === "strength" ? "G" : workout.type === "recovery" ? "J" : "·"}</span></div>
@@ -282,10 +309,16 @@ export function TrainingApp() {
       {activeTab === "week" && (
         <section className="screen week-screen">
           <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Tennis runs Monday, Wednesday and Friday. Dr. Joe and gym remain separate sessions.</p></div>
+          <div className="week-switcher" aria-label="Choose week">
+            <button onClick={() => setWeekOffset((value) => value - 1)} aria-label="Previous week">←</button>
+            <div><strong>{relativeWeekLabel(weekOffset)}</strong><small>{formatWeekRange(visibleWeekStart)}</small></div>
+            {weekOffset !== 0 && <button className="current-week-button" onClick={() => setWeekOffset(0)}>Today</button>}
+            <button onClick={() => setWeekOffset((value) => value + 1)} aria-label="Next week">→</button>
+          </div>
           <div className="week-list">
             {workouts.map((item, index) => (
-              <button key={item.id} className={`week-card ${item.weekday === todayWeekday ? "is-today" : ""}`} onClick={() => selectWorkout(index)}>
-                <span className="day-tile"><small>{item.shortDay}</small><strong>{dateForWeekday(item.weekday).getDate()}</strong></span>
+              <button key={item.id} className={`week-card ${weekOffset === 0 && item.weekday === todayWeekday ? "is-today" : ""}`} onClick={() => selectWorkout(index, weekOffset)}>
+                <span className="day-tile"><small>{item.shortDay}</small><strong>{dateForWeekday(item.weekday, weekOffset).getDate()}</strong></span>
                 <span className="week-copy"><strong>{item.title}</strong><small>{item.duration} · {item.intensity}</small></span>
                 <span className={`week-type ${item.type}`} aria-hidden="true" />
               </button>
@@ -345,7 +378,7 @@ export function TrainingApp() {
       )}
 
       <nav className="bottom-nav" aria-label="Primary">
-        <button className={activeTab === "today" ? "active" : ""} onClick={() => { setSelectedDay(todayIndex); setActiveTab("today"); }}><span className="nav-icon">●</span><small>Today</small></button>
+        <button className={activeTab === "today" ? "active" : ""} onClick={() => { setSelectedDay(todayIndex); setSelectedWeekOffset(0); setActiveTab("today"); }}><span className="nav-icon">●</span><small>Today</small></button>
         <button className={activeTab === "week" ? "active" : ""} onClick={() => setActiveTab("week")}><span className="nav-icon">▦</span><small>Week</small></button>
         <button className={activeTab === "library" ? "active" : ""} onClick={() => setActiveTab("library")}><span className="nav-icon">≡</span><small>Library</small></button>
         <button className={activeTab === "history" ? "active" : ""} onClick={() => setActiveTab("history")}><span className="nav-icon">↗</span><small>History</small></button>

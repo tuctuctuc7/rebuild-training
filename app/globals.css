@@ -118,6 +118,12 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .page-heading { padding: 5px 0 25px; }
 .page-heading h2 { max-width: 360px; }
 .page-heading > p:last-child { color: var(--muted); font-size: 14px; line-height: 1.5; max-width: 440px; }
+.week-switcher { min-height: 58px; margin: -7px 0 16px; padding: 7px; display: flex; align-items: center; gap: 7px; border: 1px solid rgba(255,255,255,.85); border-radius: 18px; background: rgba(255,255,255,.62); }
+.week-switcher > button { flex: 0 0 auto; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 12px; background: #f5f4ed; color: var(--ink); cursor: pointer; font-weight: 700; }
+.week-switcher > div { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 4px; padding-left: 3px; }
+.week-switcher strong { font-size: 12px; }
+.week-switcher small { color: var(--muted); font: 600 8px/1 var(--font-geist-mono), monospace; white-space: nowrap; }
+.week-switcher .current-week-button { width: auto; height: 30px; padding: 0 9px; border: 0; background: var(--lime); font-size: 9px; }
 .week-list { display: grid; gap: 9px; }
 .week-card { width: 100%; border: 1px solid rgba(255,255,255,.8); border-radius: 18px; background: rgba(255,255,255,.68); display: flex; align-items: center; gap: 13px; padding: 10px; text-align: left; cursor: pointer; }
 .week-card.is-today { background: var(--ink); color: white; }

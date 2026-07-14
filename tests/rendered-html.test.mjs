@@ -76,7 +76,11 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /gUltNrPPE28/);
   assert.match(data, /wKWAOJ4tAhM/);
   assert.match(app, /Watch alternate demo/);
-  assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
+  assert.match(app, /dateForWeekday\(item\.weekday, weekOffset\)\.getDate\(\)/);
+  assert.match(app, /aria-label="Previous week"/);
+  assert.match(app, /aria-label="Next week"/);
+  assert.match(app, /relativeWeekLabel\(weekOffset\)/);
+  assert.match(app, /setSelectedWeekOffset\(offset\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(data, /id: "dr-joe-a"/);
   assert.match(data, /id: "gym-a"/);
