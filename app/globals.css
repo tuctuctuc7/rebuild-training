@@ -139,6 +139,30 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .rules-card span { font: 650 10px/1.5 var(--font-geist-mono), monospace; color: var(--green); }
 .rules-card p { margin: 0; font-size: 12px; line-height: 1.45; }
 
+.library-sessions { display: grid; gap: 22px; }
+.library-session { border-radius: 25px; padding: 18px; background: rgba(255,255,255,.72); border: 1px solid rgba(255,255,255,.88); box-shadow: 0 16px 44px rgba(31,48,40,.07); }
+.library-session > header { display: flex; align-items: flex-start; gap: 14px; padding: 2px 2px 17px; }
+.library-session > header > div:last-child { min-width: 0; }
+.library-session h3 { margin: 2px 0 5px; font-size: 19px; letter-spacing: -.04em; }
+.library-session header p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.45; }
+.session-number { flex: 0 0 auto; width: 53px; height: 57px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; border-radius: 14px; background: var(--ink); color: white; }
+.session-number small { color: #aab5af; font: 650 7px/1 var(--font-geist-mono), monospace; letter-spacing: .1em; }
+.session-number strong { color: var(--lime); font: 700 17px/1 var(--font-geist-mono), monospace; }
+.continuation-note { display: flex; gap: 10px; align-items: flex-start; margin: -3px 2px 14px; border-radius: 13px; padding: 11px 12px; background: #edf4e7; color: var(--green); }
+.continuation-note span { font: 700 13px/1.35 var(--font-geist-mono), monospace; }
+.continuation-note p { margin: 0; font-size: 10px; line-height: 1.45; font-weight: 620; }
+.library-exercise-list { display: grid; gap: 8px; }
+.library-exercise { overflow: hidden; border: 1px solid var(--line); border-radius: 16px; background: rgba(247,246,240,.82); }
+.library-exercise.is-open { background: white; }
+.library-exercise > button { width: 100%; border: 0; background: transparent; padding: 12px; display: flex; align-items: center; gap: 11px; text-align: left; cursor: pointer; }
+.library-order { flex: 0 0 auto; width: 33px; height: 33px; border-radius: 10px; display: grid; place-items: center; background: #e7e7df; color: var(--green); font: 700 9px/1 var(--font-geist-mono), monospace; }
+.library-exercise.is-open .library-order { background: var(--lime); color: var(--ink); }
+.library-exercise-copy { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.library-exercise-copy strong { font-size: 12px; line-height: 1.25; letter-spacing: -.01em; }
+.library-exercise-copy small { color: var(--muted); font-size: 9px; }
+.library-exercise-detail { border-top: 1px solid var(--line); padding: 2px 14px 13px; }
+.library-exercise-detail .cue-list { margin-top: 13px; }
+
 .stat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 21px; }
 .stat-grid div { border-top: 1px solid var(--ink); padding-top: 11px; display: flex; flex-direction: column; gap: 4px; }
 .stat-grid span { font-size: 24px; letter-spacing: -.05em; font-weight: 680; }
@@ -185,7 +209,7 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .finish-summary { display: flex; gap: 7px; margin-top: 24px; }
 .finish-summary span { flex: 1; text-align: center; background: white; border-radius: 10px; padding: 10px 4px; font-size: 9px; color: var(--muted); }
 
-.bottom-nav { position: fixed; z-index: 15; bottom: 0; left: 50%; width: min(620px,100%); transform: translateX(-50%); height: calc(76px + env(safe-area-inset-bottom)); padding: 7px 25px env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(3,1fr); background: rgba(243,241,233,.88); border-top: 1px solid rgba(20,34,28,.08); backdrop-filter: blur(20px); }
+.bottom-nav { position: fixed; z-index: 15; bottom: 0; left: 50%; width: min(620px,100%); transform: translateX(-50%); height: calc(76px + env(safe-area-inset-bottom)); padding: 7px 12px env(safe-area-inset-bottom); display: grid; grid-template-columns: repeat(4,1fr); background: rgba(243,241,233,.88); border-top: 1px solid rgba(20,34,28,.08); backdrop-filter: blur(20px); }
 .bottom-nav button { border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: #87908c; cursor: pointer; }
 .bottom-nav button.active { color: var(--ink); }
 .nav-icon { height: 22px; font: 600 18px/1 var(--font-geist-mono), monospace; }

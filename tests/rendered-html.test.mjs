@@ -28,6 +28,7 @@ test("server-renders the finished training app and metadata", async () => {
   assert.match(html, /aria-label="Primary"/);
   assert.match(html, /Today/);
   assert.match(html, /Week/);
+  assert.match(html, /Library/);
   assert.match(html, /History/);
   assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
   assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
@@ -66,6 +67,12 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Reduce by 30–50%/);
   assert.match(app, /Save to history/);
   assert.match(app, /Watch video demo/);
+  assert.match(app, /activeTab === "library"/);
+  assert.match(app, /Your routines, in order\./);
+  assert.match(data, /id: "session-01"/);
+  assert.match(data, /id: "session-02"/);
+  assert.match(data, /Tibial Internal Rotation Mobilisation/);
+  assert.match(data, /Goblet Squat with Left Weight Bias/);
   assert.match(app, /dateForWeekday\(item\.weekday\)\.getDate\(\)/);
   assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(data, /id: "dr-joe-a"/);

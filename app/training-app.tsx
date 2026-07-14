@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Exercise, workouts, weekRules } from "./training-data";
+import { drJoeLibrary, Exercise, LibraryExercise, workouts, weekRules } from "./training-data";
 
-type Tab = "today" | "week" | "history";
+type Tab = "today" | "week" | "library" | "history";
 type CheckIn = { energy: number; pain: number };
 type Session = {
   id: string;
@@ -95,6 +95,26 @@ function ExerciseCard({ exercise, checks, onCheck, demoLabel }: { exercise: Exer
           </ul>
           {exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}
           {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">{demoLabel} <span aria-hidden="true">↗</span></a>}
+        </div>
+      )}
+    </article>
+  );
+}
+
+function LibraryExerciseCard({ exercise, index }: { exercise: LibraryExercise; index: number }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <article className={`library-exercise ${open ? "is-open" : ""}`}>
+      <button onClick={() => setOpen(!open)} aria-expanded={open}>
+        <span className="library-order">{String(index + 1).padStart(2, "0")}</span>
+        <span className="library-exercise-copy"><strong>{exercise.name}</strong><small>{exercise.prescription}</small></span>
+        <span className="chevron" aria-hidden="true">{open ? "−" : "+"}</span>
+      </button>
+      {open && (
+        <div className="library-exercise-detail">
+          <ul className="cue-list">{exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}</ul>
+          <p className="exercise-goal">Why: {exercise.goal}</p>
+          <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch Dr. Joe demo <span aria-hidden="true">↗</span></a>
         </div>
       )}
     </article>
@@ -272,6 +292,24 @@ export function TrainingApp() {
         </section>
       )}
 
+      {activeTab === "library" && (
+        <section className="screen library-screen">
+          <div className="page-heading"><p className="eyebrow">DR. JOE LIBRARY</p><h2>Your routines, in order.</h2><p>Each session follows the chronology and exercise order from Dr. Joe&apos;s emails. Tap an exercise for cues, goals and its demo.</p></div>
+          <div className="library-sessions">
+            {drJoeLibrary.map((session) => (
+              <section className="library-session" key={session.id}>
+                <header>
+                  <div className="session-number"><small>SESSION</small><strong>{session.number}</strong></div>
+                  <div><h3>{session.title}</h3><p>{session.summary}</p></div>
+                </header>
+                {session.continuation && <div className="continuation-note"><span>↳</span><p>{session.continuation}</p></div>}
+                <div className="library-exercise-list">{session.exercises.map((exercise, index) => <LibraryExerciseCard key={exercise.id} exercise={exercise} index={index} />)}</div>
+              </section>
+            ))}
+          </div>
+        </section>
+      )}
+
       {activeTab === "history" && (
         <section className="screen history-screen">
           <div className="page-heading"><p className="eyebrow">LOAD MEMORY</p><h2>Notice the pattern.</h2><p>The goal is more usable energy—not simply more completed work.</p></div>
@@ -306,6 +344,7 @@ export function TrainingApp() {
       <nav className="bottom-nav" aria-label="Primary">
         <button className={activeTab === "today" ? "active" : ""} onClick={() => { setSelectedDay(todayIndex); setActiveTab("today"); }}><span className="nav-icon">●</span><small>Today</small></button>
         <button className={activeTab === "week" ? "active" : ""} onClick={() => setActiveTab("week")}><span className="nav-icon">▦</span><small>Week</small></button>
+        <button className={activeTab === "library" ? "active" : ""} onClick={() => setActiveTab("library")}><span className="nav-icon">≡</span><small>Library</small></button>
         <button className={activeTab === "history" ? "active" : ""} onClick={() => setActiveTab("history")}><span className="nav-icon">↗</span><small>History</small></button>
       </nav>
     </main>

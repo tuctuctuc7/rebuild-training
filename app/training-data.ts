@@ -23,6 +23,24 @@ export type Workout = {
   exercises: Exercise[];
 };
 
+export type LibraryExercise = {
+  id: string;
+  name: string;
+  prescription: string;
+  video: string;
+  cues: string[];
+  goal: string;
+};
+
+export type DrJoeSession = {
+  id: string;
+  number: string;
+  title: string;
+  summary: string;
+  continuation?: string;
+  exercises: LibraryExercise[];
+};
+
 const tibial: Exercise = {
   id: "tibial-ir",
   name: "Tibial internal rotation",
@@ -243,4 +261,136 @@ export const weekRules = [
   "Dr. Joe exercises and gym are separate sessions",
   "One complete rest day—no catch-up work",
   "Progress only when the following morning is back to baseline",
+];
+
+export const drJoeLibrary: DrJoeSession[] = [
+  {
+    id: "session-01",
+    number: "01",
+    title: "Restore the lower-leg chain",
+    summary: "Ankle dorsiflexion, tibial rotation, hip rotation, foot control and glute activation.",
+    exercises: [
+      {
+        id: "s01-tibial-ir",
+        name: "Tibial Internal Rotation Mobilisation",
+        prescription: "2 sets × 15 reps each side",
+        video: "https://www.youtube.com/shorts/_-6RLEBq84E",
+        cues: ["Keep the foot in contact with the ground", "Slowly rotate the shin inward with control", "Do not allow the hip to rotate"],
+        goal: "Improve tibial internal rotation and prepare the lower limb for walking, running and directional changes.",
+      },
+      {
+        id: "s01-knee-over-toe",
+        name: "Knee Over Toe with Tibial Internal Rotation",
+        prescription: "2 sets × 10 reps each side",
+        video: "https://www.youtube.com/shorts/3HucseP0VA0",
+        cues: ["Bring the knee forward", "Keep the foot pointing straight", "Move slowly and with control"],
+        goal: "Improve coordination between the foot, shin and knee during loading, force absorption and directional control.",
+      },
+      {
+        id: "s01-wall-dorsiflexion",
+        name: "Dorsiflexion Mobilisation Against Wall",
+        prescription: "2 sets × 10–15 reps each side",
+        video: "https://www.youtube.com/shorts/HYFeP-R0m54",
+        cues: ["Keep the heel on the ground", "Bring the knee toward the wall", "Do not collapse inward or rotate the foot outward", "Prioritise control on the left"],
+        goal: "Restore ankle dorsiflexion after Achilles surgery and reduce compensation into the pelvis and lower back.",
+      },
+      {
+        id: "s01-ankle-stretch",
+        name: "Half-Kneeling Ankle Dorsiflexion Stretch",
+        prescription: "2 sets × 20–30 sec each side",
+        video: "https://www.youtube.com/watch?v=2B9x5pQJY7M",
+        cues: ["Keep the heel on the ground", "Slowly shift forward", "Do not rotate the foot outward", "Stretch gently only"],
+        goal: "Improve ankle and calf mobility and shock absorption during running and tennis.",
+      },
+      {
+        id: "s01-hip-liftoff",
+        name: "90/90 Hip Internal Rotation Lift-Off",
+        prescription: "2 sets × 8 reps each side",
+        video: "https://www.youtube.com/shorts/jAA1Sh2IGL4",
+        cues: ["Use a small, controlled movement", "Keep the lower back relaxed", "Rotate from the hip only"],
+        goal: "Improve hip internal rotation and prepare the hips for higher-intensity movement.",
+      },
+      {
+        id: "s01-short-foot",
+        name: "Short Foot Exercise",
+        prescription: "2 sets × 10 reps each side · hold 3 sec",
+        video: "https://www.youtube.com/shorts/D9qjQWqVIlI",
+        cues: ["Gently raise the arch of the foot", "Do not curl the toes", "Hold each repetition for 3 seconds"],
+        goal: "Activate the foot stabilisers and improve foot stability during movement.",
+      },
+      {
+        id: "s01-clamshell",
+        name: "Clamshell",
+        prescription: "2 sets × 12–15 reps each side",
+        video: "https://www.youtube.com/shorts/39vuP5xozsI",
+        cues: ["Keep both feet together", "Rotate from the hip only", "Do not rotate the pelvis or lower back", "Move slowly and with control"],
+        goal: "Improve glute activation, hip stability and single-leg loading while reducing compensatory lower-back load.",
+      },
+      {
+        id: "s01-tripod-hold",
+        name: "Tripod Single-Leg Hold on Blocks",
+        prescription: "2 sets × 20–30 sec each side",
+        video: "https://www.facebook.com/JoeOsteopath/videos/2971402579877027/",
+        cues: ["Use the first exercise in the video", "Support heel and forefoot on two small blocks", "Keep the arch unsupported", "Use equal pressure through heel, big toe and little toe", "Light hand support is acceptable"],
+        goal: "Improve tripod foot control, balance, force absorption and transfer during tennis and running.",
+      },
+    ],
+  },
+  {
+    id: "session-02",
+    number: "02",
+    title: "Re-centre the squat",
+    summary: "Left hip internal rotation, ankle dorsiflexion, glute strength and more symmetrical loading.",
+    continuation: "Continue Session 01's tibial internal rotation routine alongside these exercises.",
+    exercises: [
+      {
+        id: "s02-hip-ir",
+        name: "Half-Kneeling Hip Internal Rotation Mobilisation",
+        prescription: "2 sets × 10 reps · left",
+        video: "https://www.youtube.com/shorts/jAA1Sh2IGL4",
+        cues: ["Keep the pelvis facing forward", "Rotate from the hip rather than the lower back", "Move slowly and under control"],
+        goal: "Improve left hip internal rotation and left hip loading during squatting.",
+      },
+      {
+        id: "s02-knee-wall",
+        name: "Knee-to-Wall Ankle Mobilisation",
+        prescription: "3 sets × 10 reps · left",
+        video: "https://www.youtube.com/watch?v=rvkyQc60-HA",
+        cues: ["Keep the heel on the ground", "Drive the knee forward slowly", "Do not allow the foot to collapse inward"],
+        goal: "Improve left ankle dorsiflexion and reduce compensation from the previous Achilles surgery.",
+      },
+      {
+        id: "s02-glute-bridge",
+        name: "Single-Leg Glute Bridge",
+        prescription: "3 sets × 8–10 reps · left · hold 2 sec",
+        video: "https://www.youtube.com/shorts/qB_bC7-CQjI",
+        cues: ["Push through the left heel", "Keep the pelvis level", "Hold for 2 seconds at the top"],
+        goal: "Improve left glute activation and pelvic stability.",
+      },
+      {
+        id: "s02-step-down",
+        name: "Lateral Step-Down",
+        prescription: "2–3 sets × 8 reps · left",
+        video: "https://www.youtube.com/shorts/XCJl_ju19qw",
+        cues: ["Lower slowly", "Keep the pelvis level", "Control the movement throughout"],
+        goal: "Improve left hip control and single-leg loading.",
+      },
+      {
+        id: "s02-split-squat",
+        name: "Split Squat · Left Leg Forward",
+        prescription: "2–3 sets × 8 reps",
+        video: "https://www.youtube.com/shorts/ynGQy_GOfrQ",
+        cues: ["Allow the left leg to perform most of the work", "Keep the trunk upright", "Maintain tripod foot contact"],
+        goal: "Improve left lower-limb strength and symmetrical loading.",
+      },
+      {
+        id: "s02-goblet-squat",
+        name: "Goblet Squat with Left Weight Bias",
+        prescription: "3 sets × 8 reps",
+        video: "https://www.youtube.com/shorts/ycPCpTH0QGo",
+        cues: ["Shift slightly more body weight onto the left during the descent", "Keep both heels on the floor", "Avoid the pelvis drifting right"],
+        goal: "Retrain a symmetrical squat pattern and reduce the right pelvic shift.",
+      },
+    ],
+  },
 ];
