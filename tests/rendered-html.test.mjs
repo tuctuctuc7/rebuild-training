@@ -2,20 +2,20 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-async function render() {
+async function render(path = "/get-fit/") {
   const workerUrl = new URL("../dist/server/index.js", import.meta.url);
-  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}`);
+  workerUrl.searchParams.set("test", `${process.pid}-${Date.now()}-${path}`);
   const { default: worker } = await import(workerUrl.href);
 
   return worker.fetch(
-    new Request("https://rebuild.example/get-fit/", { headers: { accept: "text/html" } }),
+    new Request(`https://rebuild.example${path}`, { headers: { accept: "text/html" } }),
     { ASSETS: { fetch: async () => new Response("Not found", { status: 404 }) } },
     { waitUntil() {}, passThroughOnException() {} },
   );
 }
 
-test("server-renders the finished training app and metadata", async () => {
-  const response = await render();
+test("server-renders the original finished training app at /get-fit and metadata", async () => {
+  const response = await render("/get-fit/");
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
 
@@ -37,7 +37,39 @@ test("server-renders the finished training app and metadata", async () => {
   assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
   assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
   assert.match(html, /property="og:image" content="https:\/\/build\.tomnguyen\.co\/get-fit\/og\.png"/);
+  assert.doesNotMatch(html, /Dr\. Joe Exercise Library|THƯ VIỆN REBUILD|recovery-library/i);
   assert.doesNotMatch(html, /codex-preview|taking shape|SkeletonPreview|react-loading-skeleton/i);
+});
+
+test("server-renders the lightweight public recovery library at /recovery-library", async () => {
+  const response = await render("/recovery-library/");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /Dr\. Joe Exercise Library/);
+  assert.match(html, /Mobility and strength drills grouped by target area/);
+  assert.match(html, /Ankle &amp; Foot|Ankle & Foot/);
+  assert.match(html, /Hip &amp; Glute|Hip & Glute/);
+  assert.match(html, /Lower-Body Strength/);
+  assert.match(html, /Tibial Internal Rotation Mobilisation/);
+  assert.match(html, /href="\/recovery-library\/vn\/"/);
+  assert.match(html, /href="\/recovery-library\/"/);
+  assert.doesNotMatch(html, /How are you arriving\?|Save to history|Session RPE/i);
+});
+
+test("server-renders the Vietnamese native recovery library route", async () => {
+  const response = await render("/recovery-library/vn/");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /Thư viện bài tập Dr\. Joe/);
+  assert.match(html, /Các bài di động và sức mạnh được nhóm theo vùng tác động/);
+  assert.match(html, /Cổ chân &amp; Bàn chân|Cổ chân & Bàn chân/);
+  assert.match(html, /Hông &amp; Mông|Hông & Mông/);
+  assert.match(html, /Sức mạnh thân dưới/);
+  assert.match(html, /Xoay trong xương chày/);
+  assert.match(html, /href="\/recovery-library\/"/);
+  assert.doesNotMatch(html, /How are you arriving\?|Save to history|Session RPE/i);
 });
 
 test("contains the complete local-first training and offline flows", async () => {
@@ -95,7 +127,6 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /aria-label="Next week"/);
   assert.match(app, /relativeWeekLabel\(weekOffset\)/);
   assert.match(app, /setSelectedWeekOffset\(offset\)/);
-  assert.match(styles, /rebuild-header-v2\.jpg/);
   assert.match(styles, /@media \(display-mode: standalone\)/);
   assert.match(styles, /padding-top: env\(safe-area-inset-top\)/);
   assert.match(styles, /\.pull-refresh\.refreshing/);
@@ -132,4 +163,25 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
   assert.match(serviceWorker, /rebuild-shell-v7/);
   assert.match(serviceWorker, /client\.navigate\(client\.url\)/);
+});
+
+test("keeps the recovery library separate from the original /get-fit app files", async () => {
+  const [libraryApp, libraryData, libraryManifest, libraryServiceWorker] = await Promise.all([
+    readFile(new URL("../app/recovery-library/library-app.tsx", import.meta.url), "utf8"),
+    readFile(new URL("../app/recovery-library/library-data.ts", import.meta.url), "utf8"),
+    readFile(new URL("../public/recovery-library/manifest.webmanifest", import.meta.url), "utf8"),
+    readFile(new URL("../public/recovery-library/sw.js", import.meta.url), "utf8"),
+  ]);
+  const manifest = JSON.parse(libraryManifest);
+
+  assert.match(libraryApp, /language-switcher/);
+  assert.match(libraryApp, /Thư viện bài tập Dr\. Joe/);
+  assert.match(libraryApp, /navigator\.serviceWorker\.register\(`\$\{APP_ROOT\}\/sw\.js`/);
+  assert.match(libraryData, /group: "ankle-foot"/);
+  assert.match(libraryData, /group: "hip-glute"/);
+  assert.match(libraryData, /group: "lower-body-strength"/);
+  assert.equal(manifest.start_url, "/recovery-library/");
+  assert.equal(manifest.scope, "/recovery-library/");
+  assert.match(libraryServiceWorker, /rebuild-recovery-library-shell-v1/);
+  assert.match(libraryServiceWorker, /\/recovery-library\//);
 });

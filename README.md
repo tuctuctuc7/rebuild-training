@@ -25,7 +25,7 @@ Training state is intentionally local-first. It is saved under `rebuild-training
 - Vercel production deployment
 - Web App Manifest and a small custom service worker
 
-The application is hosted beneath the `/get-fit` base path. Keep that base path consistent in `next.config.ts`, metadata, the manifest, service-worker registration, and public asset URLs.
+The original training application is served at `/get-fit/`. Keep that route's metadata, manifest, service-worker registration, and public asset URLs pointed at `/get-fit/` so the installed app remains stable. A separate public exercise library is served at `/recovery-library/` with a Vietnamese route at `/recovery-library/vn/`; keep its PWA assets isolated under `public/recovery-library/`.
 
 ## Local development
 
