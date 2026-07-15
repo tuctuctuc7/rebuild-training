@@ -46,6 +46,7 @@ test("server-renders the lightweight public recovery library at /recovery-librar
   assert.equal(response.status, 200);
   const html = await response.text();
 
+  assert.match(html, /Tom’s Rebuild Library/);
   assert.match(html, /Dr\. Joe Exercise Library/);
   assert.match(html, /Mobility and strength drills grouped by target area/);
   assert.match(html, /Ankle &amp; Foot|Ankle & Foot/);
@@ -68,6 +69,7 @@ test("server-renders the Vietnamese native recovery library route", async () => 
   assert.equal(response.status, 200);
   const html = await response.text();
 
+  assert.match(html, /Tom’s Rebuild Library/);
   assert.match(html, /Thư viện bài tập Dr\. Joe/);
   assert.match(html, /Các bài di động và sức mạnh được nhóm theo vùng tác động/);
   assert.match(html, /Cổ chân &amp; Bàn chân|Cổ chân & Bàn chân/);

@@ -10,7 +10,7 @@ const APP_ROOT = "/recovery-library";
 
 const copy = {
   en: {
-    eyebrow: "REBUILD LIBRARY",
+    eyebrow: "Tom’s Rebuild Library",
     title: "Dr. Joe Exercise Library",
     moves: "MOVES",
     heroKicker: "PUBLIC MOVEMENT LIBRARY",
@@ -37,7 +37,7 @@ const copy = {
     refreshing: "Refreshing…",
   },
   vi: {
-    eyebrow: "THƯ VIỆN REBUILD",
+    eyebrow: "Tom’s Rebuild Library",
     title: "Thư viện bài tập Dr. Joe",
     moves: "BÀI",
     heroKicker: "THƯ VIỆN VẬN ĐỘNG CÔNG KHAI",
