@@ -266,7 +266,9 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 /* Public recovery library */
 .public-library-shell { padding-bottom: calc(42px + env(safe-area-inset-bottom)); }
 .public-library-shell .topbar { height: 88px; }
-.library-hero strong { max-width: 250px; }
+.library-hero { min-height: clamp(220px, 52vw, 330px); background: url('/recovery-library/og.png') center / cover no-repeat; }
+.library-hero::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: rgba(255,255,255,.04); pointer-events: none; }
+.library-hero > div { display: none; }
 .library-intro { padding: 4px 0 22px; }
 .library-intro h2 { margin: 0 0 14px; font-size: clamp(34px, 9vw, 50px); line-height: .94; letter-spacing: -.065em; max-width: 520px; }
 .library-intro p:last-child { color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 500px; margin-top: 0; }

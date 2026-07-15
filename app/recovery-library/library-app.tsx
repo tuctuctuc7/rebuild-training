@@ -270,9 +270,7 @@ export function TrainingApp({ language = "en" }: { language?: Language }) {
         </nav>
       </header>
 
-      <section className="hero-art library-hero" role="img" aria-label="Exercise library cover image">
-        <div><span>{text.heroKicker}</span><strong>{text.heroTitle}</strong></div>
-      </section>
+      <section className="hero-art library-hero" role="img" aria-label="Rebuild return athletic cover image" />
 
       <section className="library-intro">
         <p className="eyebrow">{text.introKicker}</p>
