@@ -80,11 +80,41 @@ const groupCopy: Record<MuscleGroupId, Record<Language, { label: string; summary
   },
 };
 
-const groupIcons: Record<MuscleGroupId, string> = {
-  "ankle-foot": "↧",
-  "hip-glute": "◒",
-  "lower-body-strength": "▲",
-};
+function GroupIcon({ group }: { group: MuscleGroupId }) {
+  if (group === "ankle-foot") {
+    return (
+      <svg className="body-part-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M31 8c5 7 8 14 8 23 0 6-2 12-6 17" />
+        <path d="M31 31c-8 4-13 9-16 16-2 5 1 9 7 9h21c5 0 8-3 8-7 0-3-2-5-6-5h-9" />
+        <path d="M18 47h19" />
+        <circle cx="26" cy="20" r="3" />
+      </svg>
+    );
+  }
+
+  if (group === "hip-glute") {
+    return (
+      <svg className="body-part-icon" viewBox="0 0 64 64" aria-hidden="true">
+        <path d="M24 9c-3 7-4 14-3 22 1 10 6 17 15 22" />
+        <path d="M40 9c3 7 4 14 3 22-1 10-6 17-15 22" />
+        <path d="M20 30c8-4 16-4 24 0" />
+        <path d="M27 54c-3-7-3-14 0-21" />
+        <path d="M37 54c3-7 3-14 0-21" />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className="body-part-icon" viewBox="0 0 64 64" aria-hidden="true">
+      <path d="M25 7c4 9 5 18 3 27l-5 21" />
+      <path d="M39 7c-4 9-5 18-3 27l5 21" />
+      <path d="M21 34h22" />
+      <path d="M20 55h13" />
+      <path d="M31 55h13" />
+      <path d="M27 8h10" />
+    </svg>
+  );
+}
 
 const exerciseVi: Record<string, { name: string; intensity: string; description: string }> = {
   "tibial-ir": { name: "Xoay trong xương chày", intensity: "2 hiệp × 15 lần mỗi bên", description: "Tập kiểm soát xoay cẳng chân để bàn chân, cổ chân và gối phối hợp chịu lực mượt hơn khi đi, chạy và đổi hướng." },
@@ -299,7 +329,7 @@ export function TrainingApp({ language = "en" }: { language?: Language }) {
           return (
           <section className="library-session muscle-group-section" key={group.id}>
             <header>
-              <div className="session-number group-icon" aria-hidden="true"><strong>{groupIcons[group.id]}</strong></div>
+              <div className="session-number group-icon" aria-hidden="true"><GroupIcon group={group.id} /></div>
               <div><h3>{localizedGroup.label}</h3><p>{localizedGroup.summary}</p></div>
             </header>
             <div className="library-exercise-list">{group.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} language={language} />)}</div>

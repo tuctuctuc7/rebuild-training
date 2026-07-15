@@ -285,7 +285,9 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .library-count strong { color: var(--ink); }
 .muscle-group-section > header { padding-bottom: 14px; }
 .public-library-shell .group-icon { gap: 0; }
-.public-library-shell .group-icon strong { color: var(--lime); font: 800 25px/1 var(--font-geist-mono), monospace; }
+.public-library-shell .body-part-icon { width: 32px; height: 32px; color: var(--lime); }
+.public-library-shell .body-part-icon path,
+.public-library-shell .body-part-icon circle { fill: none; stroke: currentColor; stroke-width: 4.2; stroke-linecap: round; stroke-linejoin: round; }
 .exercise-letter { flex: 0 0 auto; width: 35px; height: 35px; border-radius: 11px; display: grid; place-items: center; background: #e7e7df; color: var(--green); font: 800 12px/1 var(--font-geist-mono), monospace; }
 .library-exercise.is-open .exercise-letter { background: var(--lime); color: var(--ink); }
 .exercise-description { color: #4d5954; font-size: 13px; line-height: 1.55; margin: 13px 0; }

@@ -55,7 +55,8 @@ test("server-renders the lightweight public recovery library at /recovery-librar
   assert.match(html, /Rebuild return athletic cover image/);
   assert.doesNotMatch(html, /PUBLIC MOVEMENT LIBRARY|Find the right drill fast/);
   assert.match(html, /class="session-number group-icon"/);
-  assert.match(html, />↧<|>◒<|>▲</);
+  assert.match(html, /class="body-part-icon"/);
+  assert.doesNotMatch(html, />↧<|>◒<|>▲</);
   assert.doesNotMatch(html, /<small>GROUP<\/small><strong>0[347]<\/strong>/);
   assert.match(html, /href="\/recovery-library\/vn\/"/);
   assert.match(html, /href="\/recovery-library\/"/);
