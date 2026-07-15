@@ -268,8 +268,8 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .public-library-shell .topbar { height: 88px; }
 .library-hero strong { max-width: 250px; }
 .library-intro { padding: 4px 0 22px; }
-.library-intro h2 { margin: 0; font-size: clamp(34px, 9vw, 50px); line-height: .94; letter-spacing: -.065em; max-width: 520px; }
-.library-intro p:last-child { color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 500px; }
+.library-intro h2 { margin: 0 0 14px; font-size: clamp(34px, 9vw, 50px); line-height: .94; letter-spacing: -.065em; max-width: 520px; }
+.library-intro p:last-child { color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 500px; margin-top: 0; }
 .library-controls { display: grid; gap: 13px; margin-bottom: 16px; }
 .search-box { display: grid; gap: 7px; border: 1px solid rgba(255,255,255,.86); border-radius: 18px; padding: 12px 14px; background: rgba(255,255,255,.66); }
 .search-box span { color: var(--muted); font: 700 9px/1 var(--font-geist-mono), monospace; letter-spacing: .12em; text-transform: uppercase; }
@@ -282,6 +282,8 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .library-count { margin: 4px 0 16px; color: var(--muted); font-size: 12px; font-weight: 620; }
 .library-count strong { color: var(--ink); }
 .muscle-group-section > header { padding-bottom: 14px; }
+.public-library-shell .group-icon { gap: 0; }
+.public-library-shell .group-icon strong { color: var(--lime); font: 800 25px/1 var(--font-geist-mono), monospace; }
 .exercise-letter { flex: 0 0 auto; width: 35px; height: 35px; border-radius: 11px; display: grid; place-items: center; background: #e7e7df; color: var(--green); font: 800 12px/1 var(--font-geist-mono), monospace; }
 .library-exercise.is-open .exercise-letter { background: var(--lime); color: var(--ink); }
 .exercise-description { color: #4d5954; font-size: 13px; line-height: 1.55; margin: 13px 0; }

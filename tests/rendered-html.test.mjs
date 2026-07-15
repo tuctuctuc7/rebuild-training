@@ -52,6 +52,9 @@ test("server-renders the lightweight public recovery library at /recovery-librar
   assert.match(html, /Hip &amp; Glute|Hip & Glute/);
   assert.match(html, /Lower-Body Strength/);
   assert.match(html, /Tibial Internal Rotation Mobilisation/);
+  assert.match(html, /class="session-number group-icon"/);
+  assert.match(html, />↧<|>◒<|>▲</);
+  assert.doesNotMatch(html, /<small>GROUP<\/small><strong>0[347]<\/strong>/);
   assert.match(html, /href="\/recovery-library\/vn\/"/);
   assert.match(html, /href="\/recovery-library\/"/);
   assert.doesNotMatch(html, /How are you arriving\?|Save to history|Session RPE/i);

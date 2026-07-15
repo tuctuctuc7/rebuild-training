@@ -80,6 +80,12 @@ const groupCopy: Record<MuscleGroupId, Record<Language, { label: string; summary
   },
 };
 
+const groupIcons: Record<MuscleGroupId, string> = {
+  "ankle-foot": "↧",
+  "hip-glute": "◒",
+  "lower-body-strength": "▲",
+};
+
 const exerciseVi: Record<string, { name: string; intensity: string; description: string }> = {
   "tibial-ir": { name: "Xoay trong xương chày", intensity: "2 hiệp × 15 lần mỗi bên", description: "Tập kiểm soát xoay cẳng chân để bàn chân, cổ chân và gối phối hợp chịu lực mượt hơn khi đi, chạy và đổi hướng." },
   "knee-over-toe-ir": { name: "Gối qua mũi chân kèm xoay trong cẳng chân", intensity: "2 hiệp × 10 lần mỗi bên", description: "Kết hợp đưa gối về trước, xoay cẳng chân và giữ hướng bàn chân để hấp thụ lực với trục chuyển động tốt hơn." },
@@ -295,7 +301,7 @@ export function TrainingApp({ language = "en" }: { language?: Language }) {
           return (
           <section className="library-session muscle-group-section" key={group.id}>
             <header>
-              <div className="session-number"><small>{text.group}</small><strong>{String(group.exercises.length).padStart(2, "0")}</strong></div>
+              <div className="session-number group-icon" aria-hidden="true"><strong>{groupIcons[group.id]}</strong></div>
               <div><h3>{localizedGroup.label}</h3><p>{localizedGroup.summary}</p></div>
             </header>
             <div className="library-exercise-list">{group.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} language={language} />)}</div>
