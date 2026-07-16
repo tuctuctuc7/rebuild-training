@@ -112,7 +112,6 @@ export const dailyDrJoeWarmup: Exercise[] = [
   { ...shortFoot, id: "warmup-s01-short-foot", prescription: "2 sets × 10 reps each side · hold 3 sec", sets: 2 },
   { id: "warmup-s01-clamshell", name: "Clamshell", prescription: "2 sets × 12–15 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://www.youtube.com/shorts/39vuP5xozsI", cues: ["Keep both feet together", "Rotate from the hip only", "Do not roll the pelvis back"], goal: "Improve glute activation and hip stability while reducing lower-back compensation." },
   { ...tripod, id: "warmup-s01-tripod-hold", prescription: "2 sets × 20–30 sec each side", sets: 2 },
-  { id: "warmup-s02-hip-ir", name: "Half-kneeling hip internal rotation mobilisation", prescription: "2 sets × 10 reps · left", sets: 2, restSeconds: 30, side: "Left", video: "https://www.youtube.com/shorts/jAA1Sh2IGL4", cues: ["Keep the pelvis facing forward", "Rotate from the hip rather than the lower back", "Move slowly and under control"], goal: "Improve left hip internal rotation and left hip loading." },
   { ...kneeWall, id: "warmup-s02-knee-wall", prescription: "3 sets × 10 reps · left", sets: 3 },
   { id: "warmup-s02-glute-bridge", name: "Single-leg glute bridge", prescription: "3 sets × 8–10 reps · left · hold 2 sec", sets: 3, restSeconds: 60, side: "Left", video: "https://www.youtube.com/shorts/qB_bC7-CQjI", cues: ["Push through the left heel", "Keep the pelvis level", "Hold for 2 seconds at the top"], goal: "Improve left glute activation and pelvic stability." },
   { id: "warmup-s02-step-down", name: "Lateral step-down", prescription: "2–3 sets × 8 reps · left", sets: 2, restSeconds: 60, side: "Left", video: "https://www.youtube.com/shorts/XCJl_ju19qw", cues: ["Lower slowly", "Keep the pelvis level", "Control the movement throughout"], goal: "Improve left hip control and single-leg loading." },
@@ -315,14 +314,6 @@ export const drJoeLibrary: DrJoeSession[] = [
     summary: "Left hip internal rotation, ankle dorsiflexion, glute strength and more symmetrical loading.",
     continuation: "Continue Session 01's tibial internal rotation routine alongside these exercises.",
     exercises: [
-      {
-        id: "s02-hip-ir",
-        name: "Half-Kneeling Hip Internal Rotation Mobilisation",
-        prescription: "2 sets × 10 reps · left",
-        video: "https://www.youtube.com/shorts/jAA1Sh2IGL4",
-        cues: ["Keep the pelvis facing forward", "Rotate from the hip rather than the lower back", "Move slowly and under control"],
-        goal: "Improve left hip internal rotation and left hip loading during squatting.",
-      },
       {
         id: "s02-knee-wall",
         name: "Knee-to-Wall Ankle Mobilisation",
