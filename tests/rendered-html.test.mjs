@@ -80,6 +80,48 @@ test("server-renders the Vietnamese native recovery library route", async () => 
   assert.doesNotMatch(html, /How are you arriving\?|Save to history|Session RPE/i);
 });
 
+test("server-renders the Tom concept selector with three distinct preview routes", async () => {
+  const response = await render("/tom/");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /Three ways in\./);
+  assert.match(html, /Pick the one that feels most like Tom\./);
+  assert.match(html, /href="\/tom\/signal\/"/);
+  assert.match(html, /href="\/tom\/editorial\/"/);
+  assert.match(html, /href="\/tom\/field-notes\/"/);
+  assert.match(html, /Concept (?:<!-- -->)?01/);
+  assert.match(html, /Concept (?:<!-- -->)?02/);
+  assert.match(html, /Concept (?:<!-- -->)?03/);
+  assert.match(html, /rel="canonical" href="https:\/\/build\.tomnguyen\.co\/tom\/"/);
+  assert.doesNotMatch(html, /\/get-fit\/(?:manifest\.webmanifest|icon-192\.png|og\.png)/);
+  assert.doesNotMatch(html, /name="application-name" content="Rebuild"|name="apple-mobile-web-app-title" content="Rebuild"|name="theme-color" content="#12221b"/);
+});
+
+for (const concept of [
+  { path: "/tom/signal/", marker: "Direction 01 · Signal", interaction: "Open the signal", canonical: "signal" },
+  { path: "/tom/editorial/", marker: "Direction 02 · Unfiltered", interaction: "Shuffle the cover line", canonical: "editorial" },
+  { path: "/tom/field-notes/", marker: "Direction 03 · Field Notes", interaction: "Change the channel", canonical: "field-notes" },
+]) {
+  test(`server-renders the interactive ${concept.path} Tom concept`, async () => {
+    const response = await render(concept.path);
+    assert.equal(response.status, 200);
+    const html = await response.text();
+
+    assert.match(html, new RegExp(concept.marker.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+    assert.match(html, new RegExp(concept.interaction));
+    for (const project of ["AGENTHIC", "TUCMEDIA", "RetentionUp", "HocDigital.vn", "Socialmind", "Kursa"]) {
+      assert.match(html, new RegExp(project.replace(".", "\\.")));
+    }
+    assert.match(html, /Please don’t leave your contact info/);
+    assert.match(html, /linkedin\.com\/in\/tomnguyen7/);
+    assert.doesNotMatch(html, /mailto:|type="email"|Book a call|Schedule a call/i);
+    assert.match(html, new RegExp(`rel="canonical" href="https:\\/\\/build\\.tomnguyen\\.co\\/tom\\/${concept.canonical}\\/"`));
+    assert.doesNotMatch(html, /\/get-fit\/(?:manifest\.webmanifest|icon-192\.png|og\.png)/);
+    assert.doesNotMatch(html, /name="application-name" content="Rebuild"|name="apple-mobile-web-app-title" content="Rebuild"|name="theme-color" content="#12221b"/);
+  });
+}
+
 test("contains the complete local-first training and offline flows", async () => {
   const [app, data, styles, manifestText, serviceWorker] = await Promise.all([
     readFile(new URL("../app/training-app.tsx", import.meta.url), "utf8"),
