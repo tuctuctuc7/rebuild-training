@@ -1,3 +1,5 @@
+import type { GymSlot } from "./gym-customization";
+
 export type Exercise = {
   id: string;
   name: string;
@@ -8,6 +10,7 @@ export type Exercise = {
   video?: string;
   cues: string[];
   goal?: string;
+  slot?: GymSlot;
 };
 
 export type Workout = {
@@ -145,11 +148,11 @@ export const workouts: Workout[] = [
     note: "Daily Dr. Joe comes first; then keep strength controlled with core and easy cardio support.",
     warmup: dailyDrJoeWarmup,
     exercises: [
-      { id: "supported-row", name: "Supported row", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=k0cTJCfxa0Y", cues: ["Support the torso", "Keep ribs stacked", "Finish with two clean reps in reserve—minimum"] },
-      { id: "chest-press", name: "Chest press", prescription: "6–8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=lRo9zZ7EwpM", cues: ["Stay comfortable through the back", "Smooth tempo", "No grinding reps"] },
-      { id: "pallof", name: "Pallof press", prescription: "8 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://www.youtube.com/watch?v=axgv7H_VQOo", cues: ["Keep the pelvis square", "Exhale as the hands move away", "Resist rotation"] },
-      { id: "hanging-leg-raises-a", name: "Hanging leg raises", prescription: "2 sets × 15 reps · bodyweight", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=Pr1ieGZ5atk", cues: ["Posteriorly tilt before lifting", "Move without swinging", "Stop if the low back takes over"], goal: "Build overall anterior core strength without loading the spine." },
-      { id: "incline-treadmill-a", name: "Incline treadmill walk", prescription: "15 min · easy nasal-breathing pace", sets: 1, restSeconds: 30, video: "https://www.youtube.com/watch?v=4fN_4jD8hBY", cues: ["Keep it low intensity", "Use a slight incline only if it feels smooth", "Step off feeling better than when you started"], goal: "Add repeatable low-intensity cardio without interfering with tennis or rehab." },
+      { id: "chest-press", slot: "push", name: "Chest press", prescription: "6–8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=lRo9zZ7EwpM", cues: ["Stay comfortable through the back", "Smooth tempo", "No grinding reps"] },
+      { id: "supported-row", slot: "pull", name: "Supported row", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=k0cTJCfxa0Y", cues: ["Support the torso", "Keep ribs stacked", "Finish with two clean reps in reserve—minimum"] },
+      { id: "cable-biceps-curl", slot: "arms", name: "Cable biceps curl", prescription: "10–12 reps", sets: 2, restSeconds: 60, cues: ["Keep the elbows still", "Use a smooth full range", "Stop with two clean reps available"] },
+      { id: "hanging-leg-raises-a", slot: "abs", name: "Hanging leg raises", prescription: "15 reps · bodyweight", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=Pr1ieGZ5atk", cues: ["Posteriorly tilt before lifting", "Move without swinging", "Stop if the low back takes over"], goal: "Build overall anterior core strength without loading the spine." },
+      { id: "incline-treadmill-a", slot: "cardio", name: "Incline treadmill walk", prescription: "15 min · easy nasal-breathing pace", sets: 1, restSeconds: 30, video: "https://www.youtube.com/watch?v=4fN_4jD8hBY", cues: ["Keep it low intensity", "Use a slight incline only if it feels smooth", "Step off feeling better than when you started"], goal: "Add repeatable low-intensity cardio without interfering with tennis or rehab." },
     ],
   },
   {
@@ -177,11 +180,11 @@ export const workouts: Workout[] = [
     note: "Daily Dr. Joe comes first; then add upper body, core and easy cardio without grinding.",
     warmup: dailyDrJoeWarmup,
     exercises: [
-      { id: "lat-pulldown", name: "Lat pulldown", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=CAwf7n6Luuc", cues: ["Keep ribs stacked", "Pull without leaning back", "Leave four good reps available"] },
-      { id: "incline-pushup", name: "Incline push-up", prescription: "8 reps", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=0JUrOH--Kdk", cues: ["Choose an easy height", "Move as one unit", "Keep the lower back comfortable"] },
-      { id: "pallof-b", name: "Pallof press", prescription: "8 reps each side", sets: 2, restSeconds: 45, side: "Both sides", video: "https://www.youtube.com/watch?v=axgv7H_VQOo", cues: ["Keep the pelvis square", "Exhale as the hands move away", "Resist rotation"] },
-      { id: "hanging-leg-raises-b", name: "Hanging leg raises", prescription: "2 sets × 15 reps · bodyweight", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=Pr1ieGZ5atk", cues: ["Posteriorly tilt before lifting", "Move without swinging", "Stop if the low back takes over"], goal: "Build overall anterior core strength without loading the spine." },
-      { id: "incline-treadmill-b", name: "Incline treadmill walk", prescription: "15 min · easy nasal-breathing pace", sets: 1, restSeconds: 30, video: "https://www.youtube.com/watch?v=4fN_4jD8hBY", cues: ["Keep it low intensity", "Use a slight incline only if it feels smooth", "Step off feeling better than when you started"], goal: "Add repeatable low-intensity cardio without interfering with tennis or rehab." },
+      { id: "incline-pushup", slot: "push", name: "Incline push-up", prescription: "8 reps", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=0JUrOH--Kdk", cues: ["Choose an easy height", "Move as one unit", "Keep the lower back comfortable"] },
+      { id: "lat-pulldown", slot: "pull", name: "Lat pulldown", prescription: "8 reps", sets: 2, restSeconds: 75, video: "https://www.youtube.com/watch?v=CAwf7n6Luuc", cues: ["Keep ribs stacked", "Pull without leaning back", "Leave four good reps available"] },
+      { id: "rope-triceps-pressdown", slot: "arms", name: "Rope triceps pressdown", prescription: "10–12 reps", sets: 2, restSeconds: 60, cues: ["Keep the elbows close", "Separate the rope at the bottom", "Stop with two clean reps available"] },
+      { id: "hanging-leg-raises-b", slot: "abs", name: "Hanging leg raises", prescription: "15 reps · bodyweight", sets: 2, restSeconds: 60, video: "https://www.youtube.com/watch?v=Pr1ieGZ5atk", cues: ["Posteriorly tilt before lifting", "Move without swinging", "Stop if the low back takes over"], goal: "Build overall anterior core strength without loading the spine." },
+      { id: "incline-treadmill-b", slot: "cardio", name: "Incline treadmill walk", prescription: "15 min · easy nasal-breathing pace", sets: 1, restSeconds: 30, video: "https://www.youtube.com/watch?v=4fN_4jD8hBY", cues: ["Keep it low intensity", "Use a slight incline only if it feels smooth", "Step off feeling better than when you started"], goal: "Add repeatable low-intensity cardio without interfering with tennis or rehab." },
     ],
   },
   {

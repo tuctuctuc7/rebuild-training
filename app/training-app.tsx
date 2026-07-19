@@ -2,6 +2,14 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { drJoeLibrary, Exercise, LibraryExercise, workouts, weekRules } from "./training-data";
+import {
+  applyGymCustomization,
+  countCompletedSets,
+  GymCustomization,
+  GymSlot,
+  normalizeSavedGymExercises,
+  SavedGymExercises,
+} from "./gym-customization";
 
 type Tab = "today" | "week" | "library" | "history";
 type CheckIn = { energy: number; pain: number };
@@ -21,11 +29,19 @@ type SavedState = {
   checkIns: Record<string, CheckIn>;
   progress: Record<string, Record<string, boolean[]>>;
   history: Session[];
+  gymExercises: SavedGymExercises;
 };
 
 const STORAGE_KEY = "rebuild-training-v1";
 const EMPTY_EXERCISES: Exercise[] = [];
-const defaultState: SavedState = { checkIns: {}, progress: {}, history: [] };
+const defaultState: SavedState = { checkIns: {}, progress: {}, history: [], gymExercises: {} };
+const GYM_SLOT_LABELS: Record<GymSlot, string> = {
+  push: "PUSH",
+  pull: "PULL",
+  arms: "ARMS",
+  abs: "ABS",
+  cardio: "CARDIO · 15 MIN",
+};
 
 function dateKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -89,14 +105,54 @@ function formatTimer(seconds: number) {
   return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
-function ExerciseCard({ exercise, checks, onCheck, demoLabel }: { exercise: Exercise; checks: boolean[]; onCheck: (set: number, checked: boolean) => void; demoLabel: string }) {
+function ExerciseCard({
+  exercise,
+  checks,
+  onCheck,
+  demoLabel,
+  slot,
+  customized,
+  onSaveCustomization,
+  onResetCustomization,
+}: {
+  exercise: Exercise;
+  checks: boolean[];
+  onCheck: (set: number, checked: boolean) => void;
+  demoLabel: string;
+  slot?: GymSlot;
+  customized?: boolean;
+  onSaveCustomization?: (customization: GymCustomization) => void;
+  onResetCustomization?: () => void;
+}) {
   const [open, setOpen] = useState(false);
-  const done = checks.filter(Boolean).length;
+  const [editing, setEditing] = useState(false);
+  const [draftName, setDraftName] = useState(exercise.name);
+  const [draftSets, setDraftSets] = useState(exercise.sets);
+  const [draftPrescription, setDraftPrescription] = useState(exercise.prescription);
+  const done = countCompletedSets(checks, exercise.sets);
+
+  function beginEditing() {
+    setDraftName(exercise.name);
+    setDraftSets(exercise.sets);
+    setDraftPrescription(exercise.prescription);
+    setEditing(true);
+  }
+
+  function submitCustomization(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const name = draftName.trim();
+    const prescription = draftPrescription.trim();
+    if (!name || !prescription || !Number.isInteger(draftSets) || draftSets < 1 || draftSets > 20 || !onSaveCustomization) return;
+    onSaveCustomization({ name, prescription, sets: draftSets });
+    setEditing(false);
+  }
+
   return (
     <article className={`exercise-card ${done === exercise.sets ? "exercise-complete" : ""}`}>
       <button className="exercise-main" onClick={() => setOpen(!open)} aria-expanded={open}>
         <span className="exercise-count">{done === exercise.sets ? "✓" : String(exercise.sets)}</span>
         <span className="exercise-copy">
+          {slot && <span className="gym-slot-label">{GYM_SLOT_LABELS[slot]}</span>}
           <span className="exercise-name">{exercise.name}</span>
           <span className="exercise-meta">{exercise.prescription}{exercise.side ? ` · ${exercise.side}` : ""}</span>
         </span>
@@ -113,11 +169,33 @@ function ExerciseCard({ exercise, checks, onCheck, demoLabel }: { exercise: Exer
             ))}
             <span className="rest-label">{exercise.restSeconds}s rest</span>
           </div>
-          <ul className="cue-list">
+          {exercise.cues.length > 0 && <ul className="cue-list">
             {exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}
-          </ul>
+          </ul>}
           {exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}
           {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">{demoLabel} <span aria-hidden="true">↗</span></a>}
+          {slot && !editing && <div className="exercise-edit-actions">
+            <button type="button" onClick={beginEditing}>Customize exercise</button>
+            {customized && <button type="button" className="reset-exercise" onClick={onResetCustomization}>Reset suggestion</button>}
+          </div>}
+          {slot && editing && <form className="exercise-edit-form" onSubmit={submitCustomization}>
+            <label>
+              <span>Exercise name</span>
+              <input value={draftName} onChange={(event) => setDraftName(event.target.value)} placeholder="e.g. Dumbbell bench press" autoFocus />
+            </label>
+            <label>
+              <span>Sets</span>
+              <input type="number" min="1" max="20" inputMode="numeric" value={draftSets} onChange={(event) => setDraftSets(Number(event.target.value))} />
+            </label>
+            <label>
+              <span>Reps or time</span>
+              <input value={draftPrescription} onChange={(event) => setDraftPrescription(event.target.value)} placeholder="e.g. 8 reps or 15 min" />
+            </label>
+            <div>
+              <button type="button" onClick={() => setEditing(false)}>Cancel</button>
+              <button type="submit">Save exercise</button>
+            </div>
+          </form>}
         </div>
       )}
     </article>
@@ -205,12 +283,24 @@ export function TrainingApp() {
   const checkIn = saved.checkIns[key] ?? { energy: 3, pain: 1 };
   const recommendation = readiness(checkIn.energy, checkIn.pain);
   const workoutProgress = useMemo(() => saved.progress[key] ?? {}, [saved.progress, key]);
+  const sessionExercises = useMemo(() => workout.exercises.map((exercise) => {
+    if (!exercise.slot) return exercise;
+    return applyGymCustomization(exercise, saved.gymExercises[`${workout.id}:${exercise.slot}`]);
+  }), [saved.gymExercises, workout]);
 
   useEffect(() => {
     const hydrate = window.setTimeout(() => {
       try {
         const local = localStorage.getItem(STORAGE_KEY);
-        if (local) setSaved(JSON.parse(local));
+        if (local) {
+          const parsed = JSON.parse(local) as Partial<SavedState>;
+          setSaved({
+            checkIns: parsed.checkIns ?? {},
+            progress: parsed.progress ?? {},
+            history: parsed.history ?? [],
+            gymExercises: normalizeSavedGymExercises(parsed.gymExercises),
+          });
+        }
       } catch { /* Keep the app usable if storage is unavailable. */ }
       setHydrated(true);
     }, 0);
@@ -311,10 +401,10 @@ export function TrainingApp() {
     return { ...session, exercises, total, completed };
   }).filter((session) => session.exercises.length > 0), [warmup, workoutProgress]);
   const sessionTotals = useMemo(() => {
-    const total = workout.exercises.reduce((sum, exercise) => sum + exercise.sets, 0);
-    const completed = workout.exercises.reduce((sum, exercise) => sum + (workoutProgress[exercise.id] ?? []).filter(Boolean).length, 0);
+    const total = sessionExercises.reduce((sum, exercise) => sum + exercise.sets, 0);
+    const completed = sessionExercises.reduce((sum, exercise) => sum + countCompletedSets(workoutProgress[exercise.id] ?? [], exercise.sets), 0);
     return { total, completed };
-  }, [workout.exercises, workoutProgress]);
+  }, [sessionExercises, workoutProgress]);
   const totals = useMemo(() => ({
     total: warmupTotals.total + sessionTotals.total,
     completed: warmupTotals.completed + sessionTotals.completed,
@@ -330,6 +420,23 @@ export function TrainingApp() {
     next[set] = checked;
     setSaved((current) => ({ ...current, progress: { ...current.progress, [key]: { ...workoutProgress, [exercise.id]: next } } }));
     if (checked) setTimer({ exercise: exercise.name, remaining: exercise.restSeconds, total: exercise.restSeconds });
+  }
+
+  function saveGymExercise(slot: GymSlot, customization: GymCustomization) {
+    const storageKey = `${workout.id}:${slot}`;
+    setSaved((current) => ({
+      ...current,
+      gymExercises: { ...current.gymExercises, [storageKey]: customization },
+    }));
+  }
+
+  function resetGymExercise(slot: GymSlot) {
+    const storageKey = `${workout.id}:${slot}`;
+    setSaved((current) => {
+      const gymExercises = { ...current.gymExercises };
+      delete gymExercises[storageKey];
+      return { ...current, gymExercises };
+    });
   }
 
   function saveSession() {
@@ -465,7 +572,21 @@ export function TrainingApp() {
                 <div className="progress-ring" style={{ "--progress": `${sessionTotals.total ? (sessionTotals.completed / sessionTotals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{sessionTotals.total ? Math.round((sessionTotals.completed / sessionTotals.total) * 100) : 0}%</span></div>
               </div>
               <div className="exercise-list">
-                {workout.exercises.map((exercise) => <ExerciseCard key={exercise.id} exercise={exercise} checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)} onCheck={(set, checked) => toggleSet(exercise, set, checked)} demoLabel={workout.id.startsWith("gym-") ? "Watch video demo" : "Watch Dr. Joe demo"} />)}
+                {sessionExercises.map((exercise) => {
+                  const slot = exercise.slot;
+                  const customizationKey = slot ? `${workout.id}:${slot}` : "";
+                  return <ExerciseCard
+                    key={exercise.id}
+                    exercise={exercise}
+                    checks={workoutProgress[exercise.id] ?? Array(exercise.sets).fill(false)}
+                    onCheck={(set, checked) => toggleSet(exercise, set, checked)}
+                    demoLabel={workout.id.startsWith("gym-") ? "Watch video demo" : "Watch Dr. Joe demo"}
+                    slot={slot}
+                    customized={Boolean(slot && saved.gymExercises[customizationKey])}
+                    onSaveCustomization={slot ? (customization) => saveGymExercise(slot, customization) : undefined}
+                    onResetCustomization={slot ? () => resetGymExercise(slot) : undefined}
+                  />;
+                })}
               </div>
               <button className="finish-button" onClick={() => setShowFinish(true)}>Finish session <span>→</span></button>
             </section>
