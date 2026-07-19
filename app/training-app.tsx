@@ -4,11 +4,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { drJoeLibrary, Exercise, LibraryExercise, workouts, weekRules } from "./training-data";
 import {
   applyGymCustomization,
+  createGymCustomization,
   countCompletedSets,
   GymCustomization,
   GymSlot,
   normalizeSavedGymExercises,
   SavedGymExercises,
+  trimWorkoutExerciseProgress,
 } from "./gym-customization";
 
 type Tab = "today" | "week" | "library" | "history";
@@ -129,21 +131,27 @@ function ExerciseCard({
   const [draftName, setDraftName] = useState(exercise.name);
   const [draftSets, setDraftSets] = useState(exercise.sets);
   const [draftPrescription, setDraftPrescription] = useState(exercise.prescription);
+  const [editError, setEditError] = useState("");
   const done = countCompletedSets(checks, exercise.sets);
 
   function beginEditing() {
     setDraftName(exercise.name);
     setDraftSets(exercise.sets);
     setDraftPrescription(exercise.prescription);
+    setEditError("");
     setEditing(true);
   }
 
   function submitCustomization(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const name = draftName.trim();
-    const prescription = draftPrescription.trim();
-    if (!name || !prescription || !Number.isInteger(draftSets) || draftSets < 1 || draftSets > 20 || !onSaveCustomization) return;
-    onSaveCustomization({ name, prescription, sets: draftSets });
+    if (!slot || !onSaveCustomization) return;
+    const customization = createGymCustomization(slot, draftName, draftSets, draftPrescription);
+    if (!customization) {
+      setEditError("Enter an exercise name, 1–20 sets, and reps or time.");
+      return;
+    }
+    onSaveCustomization(customization);
+    setEditError("");
     setEditing(false);
   }
 
@@ -183,14 +191,19 @@ function ExerciseCard({
               <span>Exercise name</span>
               <input value={draftName} onChange={(event) => setDraftName(event.target.value)} placeholder="e.g. Dumbbell bench press" autoFocus />
             </label>
-            <label>
-              <span>Sets</span>
-              <input type="number" min="1" max="20" inputMode="numeric" value={draftSets} onChange={(event) => setDraftSets(Number(event.target.value))} />
-            </label>
-            <label>
-              <span>Reps or time</span>
-              <input value={draftPrescription} onChange={(event) => setDraftPrescription(event.target.value)} placeholder="e.g. 8 reps or 15 min" />
-            </label>
+            {slot === "cardio" ? (
+              <p className="fixed-cardio-duration" aria-label="15 minutes · fixed duration"><strong>15 minutes</strong> · fixed duration</p>
+            ) : <>
+              <label>
+                <span>Sets</span>
+                <input type="number" min="1" max="20" inputMode="numeric" value={draftSets} onChange={(event) => setDraftSets(Number(event.target.value))} />
+              </label>
+              <label>
+                <span>Reps or time</span>
+                <input value={draftPrescription} onChange={(event) => setDraftPrescription(event.target.value)} placeholder="e.g. 8 reps" />
+              </label>
+            </>}
+            {editError && <p className="exercise-edit-error" role="alert">{editError}</p>}
             <div>
               <button type="button" onClick={() => setEditing(false)}>Cancel</button>
               <button type="submit">Save exercise</button>
@@ -422,20 +435,25 @@ export function TrainingApp() {
     if (checked) setTimer({ exercise: exercise.name, remaining: exercise.restSeconds, total: exercise.restSeconds });
   }
 
-  function saveGymExercise(slot: GymSlot, customization: GymCustomization) {
+  function saveGymExercise(exercise: Exercise, slot: GymSlot, customization: GymCustomization) {
     const storageKey = `${workout.id}:${slot}`;
     setSaved((current) => ({
       ...current,
       gymExercises: { ...current.gymExercises, [storageKey]: customization },
+      progress: trimWorkoutExerciseProgress(current.progress, workout.id, exercise.id, Math.min(exercise.sets, customization.sets)),
     }));
   }
 
-  function resetGymExercise(slot: GymSlot) {
+  function resetGymExercise(exercise: Exercise, slot: GymSlot, suggestedSets: number) {
     const storageKey = `${workout.id}:${slot}`;
     setSaved((current) => {
       const gymExercises = { ...current.gymExercises };
       delete gymExercises[storageKey];
-      return { ...current, gymExercises };
+      return {
+        ...current,
+        gymExercises,
+        progress: trimWorkoutExerciseProgress(current.progress, workout.id, exercise.id, Math.min(exercise.sets, suggestedSets)),
+      };
     });
   }
 
@@ -575,6 +593,7 @@ export function TrainingApp() {
                 {sessionExercises.map((exercise) => {
                   const slot = exercise.slot;
                   const customizationKey = slot ? `${workout.id}:${slot}` : "";
+                  const suggestedSets = slot ? workout.exercises.find((item) => item.slot === slot)?.sets ?? exercise.sets : exercise.sets;
                   return <ExerciseCard
                     key={exercise.id}
                     exercise={exercise}
@@ -583,8 +602,8 @@ export function TrainingApp() {
                     demoLabel={workout.id.startsWith("gym-") ? "Watch video demo" : "Watch Dr. Joe demo"}
                     slot={slot}
                     customized={Boolean(slot && saved.gymExercises[customizationKey])}
-                    onSaveCustomization={slot ? (customization) => saveGymExercise(slot, customization) : undefined}
-                    onResetCustomization={slot ? () => resetGymExercise(slot) : undefined}
+                    onSaveCustomization={slot ? (customization) => saveGymExercise(exercise, slot, customization) : undefined}
+                    onResetCustomization={slot ? () => resetGymExercise(exercise, slot, suggestedSets) : undefined}
                   />;
                 })}
               </div>

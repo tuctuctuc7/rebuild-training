@@ -122,6 +122,9 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .exercise-edit-form > div { display: flex; justify-content: flex-end; gap: 8px; }
 .exercise-edit-form button { min-height: 39px; border: 1px solid var(--line); border-radius: 11px; padding: 0 13px; background: white; cursor: pointer; font-size: 10px; font-weight: 700; }
 .exercise-edit-form button[type="submit"] { border-color: var(--ink); background: var(--ink); color: white; }
+.fixed-cardio-duration { margin: 0; padding: 11px 12px; border-radius: 11px; background: white; color: var(--muted); font-size: 12px; }
+.fixed-cardio-duration strong { color: var(--ink); }
+.exercise-edit-error { margin: 0; color: var(--red); font-size: 11px; line-height: 1.4; }
 .set-row { display: flex; align-items: center; gap: 8px; }
 .set-check input { position: absolute; opacity: 0; pointer-events: none; }
 .set-check span { width: 41px; height: 41px; display: grid; place-items: center; border-radius: 13px; border: 1px solid var(--line); background: white; cursor: pointer; font: 650 12px/1 var(--font-geist-mono), monospace; }

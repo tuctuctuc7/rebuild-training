@@ -105,6 +105,8 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /localStorage\.setItem/);
   assert.match(app, /gymExercises: normalizeSavedGymExercises/);
   assert.match(app, /applyGymCustomization/);
+  assert.match(app, /trimWorkoutExerciseProgress/);
+  assert.match(app, /15 minutes · fixed duration/);
   assert.match(app, /Customize exercise/);
   assert.match(app, /Save exercise/);
   assert.match(app, /Reset suggestion/);
