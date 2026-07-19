@@ -107,9 +107,21 @@ input[type="range"] { width: 100%; accent-color: var(--ink); }
 .exercise-complete .exercise-count { background: var(--green); color: white; }
 .exercise-copy { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .exercise-name { font-size: 14px; font-weight: 670; letter-spacing: -.015em; }
+.gym-slot-label { color: var(--green); font: 750 8px/1 var(--font-geist-mono), monospace; letter-spacing: .12em; }
 .exercise-meta { color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .chevron { margin-left: auto; font-size: 20px; color: var(--muted); font-weight: 300; }
 .exercise-detail { border-top: 1px solid var(--line); padding: 15px; }
+.exercise-edit-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 11px; border-top: 1px solid var(--line); }
+.exercise-edit-actions button { border: 0; border-radius: 999px; padding: 9px 12px; background: var(--ink); color: white; cursor: pointer; font-size: 10px; font-weight: 700; }
+.exercise-edit-actions .reset-exercise { background: transparent; color: var(--green); border: 1px solid var(--line); }
+.exercise-edit-form { display: grid; gap: 11px; margin-top: 13px; padding: 13px; border-radius: 14px; background: #f3f1e9; }
+.exercise-edit-form label { display: grid; gap: 6px; }
+.exercise-edit-form label > span { color: var(--muted); font: 700 8px/1 var(--font-geist-mono), monospace; letter-spacing: .1em; text-transform: uppercase; }
+.exercise-edit-form input { width: 100%; min-height: 43px; border: 1px solid var(--line); border-radius: 11px; padding: 0 12px; outline: 0; background: white; color: var(--ink); font-size: 13px; }
+.exercise-edit-form input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(47,125,85,.1); }
+.exercise-edit-form > div { display: flex; justify-content: flex-end; gap: 8px; }
+.exercise-edit-form button { min-height: 39px; border: 1px solid var(--line); border-radius: 11px; padding: 0 13px; background: white; cursor: pointer; font-size: 10px; font-weight: 700; }
+.exercise-edit-form button[type="submit"] { border-color: var(--ink); background: var(--ink); color: white; }
 .set-row { display: flex; align-items: center; gap: 8px; }
 .set-check input { position: absolute; opacity: 0; pointer-events: none; }
 .set-check span { width: 41px; height: 41px; display: grid; place-items: center; border-radius: 13px; border: 1px solid var(--line); background: white; cursor: pointer; font: 650 12px/1 var(--font-geist-mono), monospace; }

@@ -99,10 +99,20 @@ test("contains the complete local-first training and offline flows", async () =>
     "D9qjQWqVIlI", "39vuP5xozsI", "2971402579877027",
   ]) assert.match(data, new RegExp(link));
   for (const gymDemo of [
-    "k0cTJCfxa0Y", "lRo9zZ7EwpM", "axgv7H_VQOo", "CAwf7n6Luuc", "0JUrOH--Kdk",
+    "k0cTJCfxa0Y", "lRo9zZ7EwpM", "CAwf7n6Luuc", "0JUrOH--Kdk",
   ]) assert.match(data, new RegExp(gymDemo));
 
   assert.match(app, /localStorage\.setItem/);
+  assert.match(app, /gymExercises: normalizeSavedGymExercises/);
+  assert.match(app, /applyGymCustomization/);
+  assert.match(app, /Customize exercise/);
+  assert.match(app, /Save exercise/);
+  assert.match(app, /Reset suggestion/);
+  assert.match(app, /Exercise name/);
+  assert.match(app, />Sets</);
+  assert.match(app, /Reps or time/);
+  assert.match(styles, /\.gym-slot-label/);
+  assert.match(styles, /\.exercise-edit-form/);
   assert.match(app, /navigator\.serviceWorker\.register/);
   assert.match(app, /matchMedia\("\(display-mode: standalone\)"\)/);
   assert.match(app, /classList\.toggle\("standalone-app", standalone\)/);
@@ -160,9 +170,14 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /warmup-s\$\{session\.number\}-/);
   assert.match(app, /WarmupExerciseCard/);
   assert.match(data, /Hanging leg raises/);
-  assert.match(data, /2 sets × 15 reps · bodyweight/);
+  assert.match(data, /prescription: "15 reps · bodyweight"/);
   assert.match(data, /Incline treadmill walk/);
   assert.match(data, /15 min · easy nasal-breathing pace/);
+  for (const slot of ["push", "pull", "arms", "abs", "cardio"]) {
+    assert.equal((data.match(new RegExp(`slot: "${slot}"`, "g")) ?? []).length, 2, `expected one ${slot} slot on each gym day`);
+  }
+  assert.match(data, /Cable biceps curl/);
+  assert.match(data, /Rope triceps pressdown/);
 
   assert.equal(manifest.display, "standalone");
   assert.equal(manifest.start_url, "/get-fit/");
@@ -171,7 +186,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
-  assert.match(serviceWorker, /rebuild-shell-v7/);
+  assert.match(serviceWorker, /rebuild-shell-v8/);
   assert.match(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 
