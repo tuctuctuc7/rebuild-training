@@ -86,7 +86,7 @@ test("contains the complete local-first training and offline flows", async () =>
     readFile(new URL("../app/training-data.ts", import.meta.url), "utf8"),
     readFile(new URL("../app/globals.css", import.meta.url), "utf8"),
     readFile(new URL("../public/manifest.webmanifest", import.meta.url), "utf8"),
-    readFile(new URL("../public/sw.js", import.meta.url), "utf8"),
+    readFile(new URL("../public/get-fit/sw.js", import.meta.url), "utf8"),
   ]);
   const manifest = JSON.parse(manifestText);
 
