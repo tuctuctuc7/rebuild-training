@@ -7,6 +7,34 @@ export type GymCustomization = {
 };
 
 export type SavedGymExercises = Record<string, GymCustomization>;
+export type SavedWorkoutProgress = Record<string, Record<string, boolean[]>>;
+
+export function createGymCustomization(
+  slot: GymSlot,
+  nameValue: string,
+  sets: number,
+  prescriptionValue: string,
+): GymCustomization | null {
+  const name = nameValue.trim();
+  if (!name) return null;
+  if (slot === "cardio") return { name, sets: 1, prescription: "15 min" };
+
+  const prescription = prescriptionValue.trim();
+  if (!prescription || !Number.isInteger(sets) || sets < 1 || sets > 20) return null;
+  return { name, sets, prescription };
+}
+
+export function trimWorkoutExerciseProgress(
+  progress: SavedWorkoutProgress,
+  workoutId: string,
+  exerciseId: string,
+  maxSets: number,
+): SavedWorkoutProgress {
+  return Object.fromEntries(Object.entries(progress).map(([sessionKey, session]) => {
+    if (!sessionKey.endsWith(`:${workoutId}`) || !session[exerciseId]) return [sessionKey, session];
+    return [sessionKey, { ...session, [exerciseId]: session[exerciseId].slice(0, maxSets) }];
+  }));
+}
 
 export function countCompletedSets(checks: boolean[], sets: number): number {
   return checks.slice(0, sets).filter(Boolean).length;
@@ -54,6 +82,10 @@ export function normalizeSavedGymExercises(value: unknown): SavedGymExercises {
       ? (candidate as { prescription: string }).prescription.trim()
       : "";
     const sets = Number((candidate as { sets?: unknown }).sets);
+    if (name && key.endsWith(":cardio")) {
+      normalized[key] = { name, prescription: "15 min", sets: 1 };
+      continue;
+    }
     if (name && prescription && Number.isInteger(sets) && sets >= 1 && sets <= 20) {
       normalized[key] = { name, prescription, sets };
     }
