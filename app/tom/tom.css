@@ -1,0 +1,104 @@
+.tom-cinematic {
+  min-height: 100dvh;
+  width: 100%;
+  overflow: clip;
+  background: #070b10;
+  color: #f5f7f8;
+  font: 16px/1.55 Arial, Helvetica, sans-serif;
+}
+.tom-cinematic *, .tom-cinematic *::before, .tom-cinematic *::after { box-sizing: border-box; }
+.tom-cinematic a { color: inherit; }
+.tom-cinematic button { font: inherit; }
+.tom-nav {
+  height: 70px;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding: 0 max(24px, calc((100vw - 1280px) / 2));
+  background: rgba(7, 11, 16, .88);
+  backdrop-filter: blur(18px);
+  border-bottom: 1px solid #1d2731;
+}
+.tom-nav strong { font-size: 20px; }
+.tom-nav div { display: flex; gap: 30px; margin-left: auto; }
+.tom-nav a { text-decoration: none; color: #aab4bf; }
+.tom-nav a:hover { color: #fff; }
+.tom-hero {
+  min-height: calc(100vh - 70px);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1440px;
+  margin: auto;
+  padding: 54px clamp(24px, 4vw, 64px);
+  gap: 64px;
+  align-items: center;
+}
+.tom-hero-copy { max-width: 650px; }
+.tom-status { font: 12px ui-monospace, monospace; color: #76e3ff; text-transform: uppercase; letter-spacing: .12em; }
+.tom-status::before { content: ""; display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #76e3ff; margin-right: 9px; box-shadow: 0 0 20px #76e3ff; }
+.tom-hero h1 { font-size: clamp(60px, 8vw, 118px); line-height: .88; letter-spacing: -.075em; margin: 28px 0 36px; font-weight: 600; }
+.tom-hero p { font-size: clamp(20px, 2vw, 27px); color: #aab4bf; max-width: 590px; line-height: 1.35; }
+.tom-hero-actions { display: flex; gap: 12px; margin-top: 36px; }
+.tom-pill { border-radius: 999px; padding: 13px 18px; text-decoration: none; border: 1px solid #324354; }
+.tom-pill.tom-primary { background: #f5f7f8; color: #070b10; border-color: #f5f7f8; }
+.tom-portrait { height: min(74vh, 760px); background: url('/tom/tom-city-work.jpg') center / cover; border-radius: 18px; position: relative; overflow: hidden; }
+.tom-portrait::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 55%, rgba(7, 11, 16, .9)); }
+.tom-portrait-caption { position: absolute; z-index: 1; bottom: 24px; left: 24px; right: 24px; display: flex; justify-content: space-between; gap: 16px; font: 12px ui-monospace, monospace; color: #d8e4ed; }
+.tom-section { padding: 120px clamp(24px, 6vw, 92px); max-width: 1440px; margin: auto; scroll-margin-top: 70px; }
+.tom-section-label { color: #76e3ff; font: 12px ui-monospace, monospace; text-transform: uppercase; letter-spacing: .12em; }
+.tom-section h2 { font-size: clamp(42px, 6vw, 80px); line-height: .98; letter-spacing: -.055em; margin: 20px 0 55px; max-width: 950px; }
+.tom-portfolio { border-top: 1px solid #324354; }
+.tom-work-row { display: grid; grid-template-columns: 80px 1.1fr 1fr auto; gap: 24px; align-items: center; padding: 28px 0; border-bottom: 1px solid #25313c; }
+.tom-work-row:hover h3 { color: #76e3ff; }
+.tom-work-row small { color: #687886; font: 12px ui-monospace, monospace; }
+.tom-work-row h3 { font-size: 34px; margin: 0; letter-spacing: -.035em; }
+.tom-work-row p { margin: 0; color: #97a5b2; }
+.tom-work-row span { color: #687886; }
+.tom-profile { max-width: none; background: #0d131a; display: grid; grid-template-columns: minmax(0, 1fr) minmax(330px, 560px); padding: 0; scroll-margin-top: 70px; }
+.tom-profile-photo { min-height: 720px; background: url('/tom/tom-coast-work.jpg') center / cover; }
+.tom-profile-copy { padding: clamp(50px, 8vw, 120px); display: flex; flex-direction: column; justify-content: center; }
+.tom-profile-copy blockquote { font-size: clamp(30px, 4vw, 52px); letter-spacing: -.045em; line-height: 1.08; margin: 26px 0; }
+.tom-profile-copy p { color: #aab4bf; max-width: 570px; font-size: 18px; }
+.tom-switcher { display: flex; gap: 8px; margin-top: 30px; }
+.tom-switcher button { background: transparent; color: #aab4bf; border: 1px solid #324354; border-radius: 999px; padding: 10px 14px; cursor: pointer; }
+.tom-switcher button.active { background: #76e3ff; color: #071017; border-color: #76e3ff; }
+.tom-ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.tom-idea { border: 1px solid #25313c; border-radius: 14px; padding: 26px; min-height: 300px; display: flex; flex-direction: column; background: #0a0f15; }
+.tom-idea:hover { border-color: #76e3ff; }
+.tom-idea small { font: 12px ui-monospace, monospace; color: #76e3ff; }
+.tom-idea h3 { font-size: 27px; line-height: 1.15; margin: 44px 0; }
+.tom-idea span { margin-top: auto; color: #8696a4; }
+.tom-contact { border-top: 1px solid #25313c; border-bottom: 1px solid #25313c; display: grid; grid-template-columns: 1fr auto; align-items: end; }
+.tom-contact .tom-pill { white-space: nowrap; }
+.tom-footer { max-width: 1440px; margin: auto; padding: 26px clamp(24px, 6vw, 92px); display: flex; justify-content: space-between; gap: 20px; color: #687886; font-size: 13px; }
+
+@media (max-width: 800px) {
+  .tom-nav { padding: 0 16px; height: 62px; }
+  .tom-nav div { gap: 16px; }
+  .tom-nav div a:nth-child(2) { display: none; }
+  .tom-hero { grid-template-columns: 1fr; padding: 54px 16px 20px; gap: 42px; }
+  .tom-hero h1 { font-size: 66px; }
+  .tom-portrait { height: 520px; }
+  .tom-section { padding: 86px 16px; }
+  .tom-work-row { grid-template-columns: 36px 1fr auto; }
+  .tom-work-row p { grid-column: 2 / 4; }
+  .tom-profile { grid-template-columns: 1fr; }
+  .tom-profile-photo { min-height: 480px; }
+  .tom-profile-copy { padding: 64px 16px; }
+  .tom-ideas { grid-template-columns: 1fr; }
+  .tom-idea { min-height: 230px; }
+  .tom-contact { grid-template-columns: 1fr; gap: 35px; }
+  .tom-contact .tom-pill { justify-self: start; }
+  .tom-footer { padding: 22px 16px; }
+}
+
+@media (max-width: 430px) {
+  .tom-nav strong { font-size: 16px; }
+  .tom-nav div { gap: 12px; }
+  .tom-nav a { font-size: 13px; }
+  .tom-hero h1 { font-size: clamp(54px, 17vw, 66px); }
+  .tom-hero-actions { align-items: flex-start; flex-direction: column; }
+  .tom-portrait-caption { align-items: flex-start; flex-direction: column; }
+}

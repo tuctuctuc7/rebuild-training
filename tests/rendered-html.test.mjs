@@ -80,6 +80,29 @@ test("server-renders the Vietnamese native recovery library route", async () => 
   assert.doesNotMatch(html, /How are you arriving\?|Save to history|Session RPE/i);
 });
 
+test("server-renders the selected Cinematic Product site at /tom without preview artifacts", async () => {
+  const response = await render("/tom/");
+  assert.equal(response.status, 200);
+  const html = await response.text();
+
+  assert.match(html, /<title>Tom Nguyen · Cinematic Product<\/title>/i);
+  assert.match(html, /Work close/);
+  assert.match(html, /to the edge\./);
+  assert.match(html, /Six active bets/);
+  assert.match(html, /Built between cultures/);
+  assert.match(html, /Profile view/);
+  assert.match(html, />Story<\/button>/);
+  assert.match(html, />Principle<\/button>/);
+  for (const project of ["AGENTHIC", "TUCMEDIA", "RetentionUp", "HocDigital.vn", "Socialmind", "Kursa"]) {
+    assert.match(html, new RegExp(project.replace(".", "\\.")));
+  }
+  assert.match(html, /linkedin\.com\/in\/tomnguyen7/);
+  assert.match(html, /rel="canonical" href="https:\/\/build\.tomnguyen\.co\/tom\/"/);
+  assert.doesNotMatch(html, /Studio Index|Field Guide|Round two|art directions|private staging/i);
+  assert.doesNotMatch(html, /\/get-fit\/(?:manifest\.webmanifest|icon-192\.png|og\.png)/);
+  assert.doesNotMatch(html, /name="application-name" content="Rebuild"|name="apple-mobile-web-app-title" content="Rebuild"|name="theme-color" content="#12221b"/);
+});
+
 test("contains the complete local-first training and offline flows", async () => {
   const [app, data, styles, manifestText, serviceWorker] = await Promise.all([
     readFile(new URL("../app/training-app.tsx", import.meta.url), "utf8"),
