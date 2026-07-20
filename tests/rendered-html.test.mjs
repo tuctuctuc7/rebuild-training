@@ -98,6 +98,7 @@ test("server-renders the selected Cinematic Product site at /tom without preview
   }
   assert.match(html, /linkedin\.com\/in\/tomnguyen7/);
   assert.match(html, /rel="canonical" href="https:\/\/build\.tomnguyen\.co\/tom\/"/);
+  assert.match(html, /rel="icon" href="(?:https:\/\/build\.tomnguyen\.co)?\/tom\/icon\.svg"/);
   assert.doesNotMatch(html, /Studio Index|Field Guide|Round two|art directions|private staging/i);
   assert.doesNotMatch(html, /\/get-fit\/(?:manifest\.webmanifest|icon-192\.png|og\.png)/);
   assert.doesNotMatch(html, /name="application-name" content="Rebuild"|name="apple-mobile-web-app-title" content="Rebuild"|name="theme-color" content="#12221b"/);

@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   manifest: null,
   applicationName: null,
   appleWebApp: null,
-  icons: null,
+  icons: { icon: "/tom/icon.svg" },
   alternates: { canonical: "/tom/" },
   openGraph: { title, description, type: "website", url: "/tom/", images: [] },
   twitter: { card: "summary", title, description, images: [] },
