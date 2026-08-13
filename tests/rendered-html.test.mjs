@@ -34,6 +34,7 @@ test("server-renders the original finished training app at /get-fit and metadata
   assert.match(html, /class="library-session today-warmup-session"/);
   assert.match(html, /Restore the lower-leg chain/);
   assert.match(html, /Re-centre the squat/);
+  assert.match(html, /Rebalance the pelvis/);
   assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
   assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
   assert.match(html, /property="og:image" content="https:\/\/build\.tomnguyen\.co\/get-fit\/og\.png"/);
@@ -161,10 +162,31 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /Your routines, in order\./);
   assert.match(data, /id: "session-01"/);
   assert.match(data, /id: "session-02"/);
+  assert.match(data, /id: "session-03"/);
   assert.match(data, /Tibial Internal Rotation Mobilisation/);
   assert.match(data, /Goblet Squat with Left Weight Bias/);
   assert.doesNotMatch(data, /id: "s02-hip-ir"/);
   assert.doesNotMatch(data, /id: "warmup-s02-hip-ir"/);
+  for (const id of [
+    "s03-foam-roll-tfl",
+    "s03-foam-roll-ql",
+    "s03-tfl-stretch",
+    "s03-ql-stretch",
+    "s03-copenhagen-adduction",
+    "s03-side-plank",
+  ]) assert.match(data, new RegExp(`id: "${id}"`));
+  for (const id of [
+    "warmup-s03-foam-roll-tfl",
+    "warmup-s03-foam-roll-ql",
+    "warmup-s03-tfl-stretch",
+    "warmup-s03-ql-stretch",
+    "warmup-s03-copenhagen-adduction",
+    "warmup-s03-side-plank",
+  ]) assert.match(data, new RegExp(`id: "${id}"`));
+  assert.doesNotMatch(data, /id: "s03-clamshell"/);
+  assert.doesNotMatch(data, /id: "warmup-s03-clamshell"/);
+  assert.doesNotMatch(data, /TT__6hS5w/);
+  assert.equal((data.match(/name: "Clamshell"/g) ?? []).length, 2, "Clamshell should remain only in Session 01 library and warm-up");
   assert.match(data, /gUltNrPPE28/);
   assert.match(data, /wKWAOJ4tAhM/);
   assert.match(app, /Watch alternate demo/);
@@ -192,6 +214,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /warmup: dailyDrJoeWarmup/g);
   assert.equal((data.match(/warmup: dailyDrJoeWarmup/g) ?? []).length, 7);
   assert.match(app, /DAILY DR\. JOE WARM-UP/);
+  assert.match(app, /Session 01 \+ Session 02 \+ Session 03 every day/);
   assert.match(app, /Done before tennis, gym, recovery, or rest/);
   assert.match(app, /warmup-s\$\{session\.number\}-/);
   assert.match(app, /WarmupExerciseCard/);
@@ -212,7 +235,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
-  assert.match(serviceWorker, /rebuild-shell-v8/);
+  assert.match(serviceWorker, /rebuild-shell-v9/);
   assert.match(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 

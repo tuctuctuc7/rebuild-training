@@ -175,7 +175,7 @@ function ExerciseCard({
                 <span>{checks[index] ? "✓" : index + 1}</span>
               </label>
             ))}
-            <span className="rest-label">{exercise.restSeconds}s rest</span>
+            {exercise.restSeconds > 0 && <span className="rest-label">{exercise.restSeconds}s rest</span>}
           </div>
           {exercise.cues.length > 0 && <ul className="cue-list">
             {exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}
@@ -258,7 +258,7 @@ function WarmupExerciseCard({ exercise, index, checks, onCheck }: { exercise: Ex
                 <span>{checks[setIndex] ? "✓" : setIndex + 1}</span>
               </label>
             ))}
-            <span className="rest-label">{exercise.restSeconds}s rest</span>
+            {exercise.restSeconds > 0 && <span className="rest-label">{exercise.restSeconds}s rest</span>}
           </div>
           <ul className="cue-list">{exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}</ul>
           {exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}
@@ -560,7 +560,7 @@ export function TrainingApp() {
           {warmup.length > 0 && (
             <section className="exercise-section warmup-section">
               <div className="section-title exercise-title">
-                <div><p className="eyebrow">DAILY DR. JOE WARM-UP</p><h3>{warmupTotals.completed}/{warmupTotals.total} sets complete</h3><p>Done before tennis, gym, recovery, or rest. Session 01 + Session 02 every day.</p></div>
+                <div><p className="eyebrow">DAILY DR. JOE WARM-UP</p><h3>{warmupTotals.completed}/{warmupTotals.total} sets complete</h3><p>Done before tennis, gym, recovery, or rest. Session 01 + Session 02 + Session 03 every day.</p></div>
                 <div className="progress-ring" style={{ "--progress": `${warmupTotals.total ? (warmupTotals.completed / warmupTotals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{warmupTotals.total ? Math.round((warmupTotals.completed / warmupTotals.total) * 100) : 0}%</span></div>
               </div>
               <div className="today-warmup-sessions">
@@ -625,7 +625,7 @@ export function TrainingApp() {
 
       {activeTab === "week" && (
         <section className="screen week-screen">
-          <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Tennis runs Monday, Wednesday and Friday. The full Dr. Joe Session 01 + Session 02 warm-up happens every day before the main work.</p></div>
+          <div className="page-heading"><p className="eyebrow">YOUR RHYTHM</p><h2>A week built to recover.</h2><p>Tennis runs Monday, Wednesday and Friday. The full Dr. Joe Session 01 + Session 02 + Session 03 warm-up happens every day before the main work.</p></div>
           <div className="week-switcher" aria-label="Choose week">
             <button onClick={() => setWeekOffset((value) => value - 1)} aria-label="Previous week">←</button>
             <div><strong>{relativeWeekLabel(weekOffset)}</strong><small>{formatWeekRange(visibleWeekStart)}</small></div>
