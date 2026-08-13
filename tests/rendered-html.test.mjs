@@ -152,6 +152,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /showStatusScrim/);
   assert.match(app, /window\.addEventListener\("scroll", onScroll/);
   assert.match(app, /setTimer\(\{ exercise: exercise\.name/);
+  assert.match(app, /if \(checked && exercise\.restSeconds > 0\) setTimer/);
   assert.match(app, /type="checkbox"/);
   assert.match(app, /type="range"/);
   assert.match(app, /Recovery only/);

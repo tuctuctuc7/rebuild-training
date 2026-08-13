@@ -432,7 +432,7 @@ export function TrainingApp() {
     const next = [...prior];
     next[set] = checked;
     setSaved((current) => ({ ...current, progress: { ...current.progress, [key]: { ...workoutProgress, [exercise.id]: next } } }));
-    if (checked) setTimer({ exercise: exercise.name, remaining: exercise.restSeconds, total: exercise.restSeconds });
+    if (checked && exercise.restSeconds > 0) setTimer({ exercise: exercise.name, remaining: exercise.restSeconds, total: exercise.restSeconds });
   }
 
   function saveGymExercise(exercise: Exercise, slot: GymSlot, customization: GymCustomization) {
