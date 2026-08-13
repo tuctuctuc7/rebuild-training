@@ -120,6 +120,12 @@ export const dailyDrJoeWarmup: Exercise[] = [
   { id: "warmup-s02-step-down", name: "Lateral step-down", prescription: "2–3 sets × 8 reps · left", sets: 2, restSeconds: 60, side: "Left", video: "https://www.youtube.com/shorts/XCJl_ju19qw", cues: ["Lower slowly", "Keep the pelvis level", "Control the movement throughout"], goal: "Improve left hip control and single-leg loading." },
   { id: "warmup-s02-split-squat", name: "Split squat · left leg forward", prescription: "2–3 sets × 8 reps", sets: 2, restSeconds: 90, side: "Left forward", video: "https://www.youtube.com/shorts/ynGQy_GOfrQ", cues: ["Allow the left leg to perform most of the work", "Keep the trunk upright", "Maintain tripod foot contact"], goal: "Improve left lower-limb strength and symmetrical loading." },
   { id: "warmup-s02-goblet-squat", name: "Goblet squat with left weight bias", prescription: "3 sets × 8 reps", sets: 3, restSeconds: 90, side: "Left bias", video: "https://www.youtube.com/shorts/ycPCpTH0QGo", cues: ["Shift slightly more body weight onto the left during the descent", "Keep both heels on the floor", "Avoid the pelvis drifting right"], goal: "Retrain a symmetrical squat pattern and reduce the right pelvic shift." },
+  { id: "warmup-s03-foam-roll-tfl", name: "Foam roll TFL", prescription: "2 sets × 60–90 sec", sets: 2, restSeconds: 0, side: "Left side", video: "https://www.youtube.com/shorts/dCSN5TdsmxU", cues: [], goal: "Reduce TFL tightness and the upward pull contributing to the left hip hike." },
+  { id: "warmup-s03-foam-roll-ql", name: "Foam roll quadratus lumborum", prescription: "2 sets × 60–90 sec", sets: 2, restSeconds: 0, side: "Left side", video: "https://www.youtube.com/shorts/qMtQuXl5skM", cues: [], goal: "Reduce QL tightness and improve lumbar and pelvic balance." },
+  { id: "warmup-s03-tfl-stretch", name: "TFL stretch", prescription: "4–5 reps × hold 30 sec", sets: 4, restSeconds: 0, side: "Left side", video: "https://www.youtube.com/watch?v=q9ZHa9Fgblw", cues: [], goal: "Stretch the TFL and reduce the elevation of the left hip." },
+  { id: "warmup-s03-ql-stretch", name: "Quadratus lumborum stretch", prescription: "4–5 reps × hold 30 sec", sets: 4, restSeconds: 0, side: "Left side", video: "https://www.youtube.com/shorts/GMyCznjjU20", cues: [], goal: "Reduce QL shortening and unnecessary pressure on the lower back." },
+  { id: "warmup-s03-copenhagen-adduction", name: "Copenhagen adduction", prescription: "2–3 sets × 8–10 reps", sets: 2, restSeconds: 0, side: "Left adductor focus", video: "https://www.youtube.com/shorts/CYfcIXEA78s", cues: [], goal: "Increase activation of the left adductor group and support pelvic stability." },
+  { id: "warmup-s03-side-plank", name: "Side plank", prescription: "2–3 sets · hold until fatigue", sets: 2, restSeconds: 0, side: "Right side", video: "https://www.youtube.com/shorts/sKMD_pbNm7w", cues: [], goal: "Strengthen the right QL and improve pelvic stability and control." },
 ];
 
 export const workouts: Workout[] = [
@@ -231,7 +237,7 @@ export const workouts: Workout[] = [
 export const weekRules = [
   "One tennis session stays deliberately easy",
   "No hard tennis on consecutive days",
-  "Full Dr. Joe Session 01 + Session 02 warm-up happens every day before tennis, gym, recovery or rest",
+  "Full Dr. Joe Session 01 + Session 02 + Session 03 warm-up happens every day before tennis, gym, recovery or rest",
   "Core and low-intensity cardio live on gym days unless recovery says otherwise",
   "Progress only when the following morning is back to baseline",
 ];
@@ -357,6 +363,21 @@ export const drJoeLibrary: DrJoeSession[] = [
         cues: ["Shift slightly more body weight onto the left during the descent", "Keep both heels on the floor", "Avoid the pelvis drifting right"],
         goal: "Retrain a symmetrical squat pattern and reduce the right pelvic shift.",
       },
+    ],
+  },
+  {
+    id: "session-03",
+    number: "03",
+    title: "Rebalance the pelvis",
+    summary: "Left TFL and QL release, targeted stretching, left adductor activation and right-side trunk strength.",
+    continuation: "Clamshell remains in Session 01 and is not repeated here.",
+    exercises: [
+      { id: "s03-foam-roll-tfl", name: "Foam Roll TFL · Left Side", prescription: "2 sets × 60–90 sec", video: "https://www.youtube.com/shorts/dCSN5TdsmxU", cues: [], goal: "Reduce TFL tightness and the upward pull contributing to the left hip hike." },
+      { id: "s03-foam-roll-ql", name: "Foam Roll Quadratus Lumborum · Left Side", prescription: "2 sets × 60–90 sec", video: "https://www.youtube.com/shorts/qMtQuXl5skM", cues: [], goal: "Reduce QL tightness and improve lumbar and pelvic balance." },
+      { id: "s03-tfl-stretch", name: "TFL Stretch · Left Side", prescription: "4–5 reps × hold 30 sec", video: "https://www.youtube.com/watch?v=q9ZHa9Fgblw", cues: [], goal: "Stretch the TFL and reduce the elevation of the left hip." },
+      { id: "s03-ql-stretch", name: "Quadratus Lumborum Stretch · Left Side", prescription: "4–5 reps × hold 30 sec", video: "https://www.youtube.com/shorts/GMyCznjjU20", cues: [], goal: "Reduce QL shortening and unnecessary pressure on the lower back." },
+      { id: "s03-copenhagen-adduction", name: "Copenhagen Adduction", prescription: "2–3 sets × 8–10 reps", video: "https://www.youtube.com/shorts/CYfcIXEA78s", cues: [], goal: "Increase activation of the left adductor group and support pelvic stability." },
+      { id: "s03-side-plank", name: "Side Plank · Right Side", prescription: "2–3 sets · hold until fatigue", video: "https://www.youtube.com/shorts/sKMD_pbNm7w", cues: [], goal: "Strengthen the right QL and improve pelvic stability and control." },
     ],
   },
 ];
