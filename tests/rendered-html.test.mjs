@@ -14,7 +14,7 @@ async function render(path = "/get-fit/") {
   );
 }
 
-test("server-renders the original finished training app at /get-fit and metadata", async () => {
+test("server-renders the library-only Rebuild app at /get-fit and metadata", async () => {
   const response = await render("/get-fit/");
   assert.equal(response.status, 200);
   assert.match(response.headers.get("content-type") ?? "", /^text\/html\b/i);
@@ -22,22 +22,12 @@ test("server-renders the original finished training app at /get-fit and metadata
   const html = await response.text();
   assert.match(html, /<title>Rebuild · Return Athletic<\/title>/i);
   assert.match(html, /Return athletic\./);
-  assert.match(html, /How are you arriving\?/);
-  assert.match(html, /Energy/);
-  assert.match(html, /Pain/);
-  assert.match(html, /aria-label="Primary"/);
-  assert.match(html, /Today/);
-  assert.match(html, /Week/);
-  assert.match(html, /Library/);
-  assert.match(html, /History/);
-  assert.match(html, /class="today-warmup-sessions"/);
-  assert.match(html, /class="library-session today-warmup-session"/);
-  assert.match(html, /Restore the lower-leg chain/);
-  assert.match(html, /Re-centre the squat/);
-  assert.match(html, /Rebalance the pelvis/);
-  assert.match(html, /not confirmed cumulative or daily/);
-  assert.match(html, /Latest sessions · optional reference/);
-  assert.match(html, /View session library/);
+  assert.match(html, /By session/);
+  assert.match(html, /By muscle area/);
+  assert.equal((html.match(/data-exercise-id=/g) ?? []).length, 27);
+  assert.doesNotMatch(html, /How are you arriving|week-chip|>Today<|>Week<|>History<|Save to history/);
+  assert.match(html, /About session 01/);
+  assert.match(html, /hidden="" class="session-info"/);
   assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
   assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
   assert.match(html, /property="og:image" content="https:\/\/build\.tomnguyen\.co\/get-fit\/og\.png"/);
@@ -117,7 +107,7 @@ test("server-renders the selected Cinematic Product site at /tom without preview
   assert.doesNotMatch(html, /name="application-name" content="Rebuild"|name="apple-mobile-web-app-title" content="Rebuild"|name="theme-color" content="#12221b"/);
 });
 
-test("contains the complete local-first training and offline flows", async () => {
+test("contains the preserved source data and standalone offline flows", async () => {
   const [app, data, styles, manifestText, serviceWorker] = await Promise.all([
     readFile(new URL("../app/training-app.tsx", import.meta.url), "utf8"),
     readFile(new URL("../app/training-data.ts", import.meta.url), "utf8"),
@@ -139,17 +129,6 @@ test("contains the complete local-first training and offline flows", async () =>
     "k0cTJCfxa0Y", "lRo9zZ7EwpM", "CAwf7n6Luuc", "0JUrOH--Kdk",
   ]) assert.match(data, new RegExp(gymDemo));
 
-  assert.match(app, /localStorage\.setItem/);
-  assert.match(app, /gymExercises: normalizeSavedGymExercises/);
-  assert.match(app, /applyGymCustomization/);
-  assert.match(app, /trimWorkoutExerciseProgress/);
-  assert.match(app, /15 minutes · fixed duration/);
-  assert.match(app, /Customize exercise/);
-  assert.match(app, /Save exercise/);
-  assert.match(app, /Reset suggestion/);
-  assert.match(app, /Exercise name/);
-  assert.match(app, />Sets</);
-  assert.match(app, /Reps or time/);
   assert.match(styles, /\.gym-slot-label/);
   assert.match(styles, /\.exercise-edit-form/);
   assert.match(app, /navigator\.serviceWorker\.register/);
@@ -163,16 +142,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(app, /className="refresh-spinner"/);
   assert.match(app, /showStatusScrim/);
   assert.match(app, /window\.addEventListener\("scroll", onScroll/);
-  assert.match(app, /setTimer\(\{ exercise: exercise\.name/);
-  assert.match(app, /if \(checked && exercise\.restSeconds > 0\) setTimer/);
   assert.match(app, /type="checkbox"/);
-  assert.match(app, /type="range"/);
-  assert.match(app, /Recovery only/);
-  assert.match(app, /Reduce by 30–50%/);
-  assert.match(app, /Save to history/);
-  assert.match(app, /Watch video demo/);
-  assert.match(app, /activeTab === "library"/);
-  assert.match(app, /Your routines, in order\./);
   assert.match(data, /id: "session-01"/);
   assert.match(data, /id: "session-02"/);
   assert.match(data, /id: "session-03"/);
@@ -203,11 +173,6 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /gUltNrPPE28/);
   assert.match(data, /wKWAOJ4tAhM/);
   assert.match(app, /Watch alternate demo/);
-  assert.match(app, /dateForWeekday\(item\.weekday, weekOffset\)\.getDate\(\)/);
-  assert.match(app, /aria-label="Previous week"/);
-  assert.match(app, /aria-label="Next week"/);
-  assert.match(app, /relativeWeekLabel\(weekOffset\)/);
-  assert.match(app, /setSelectedWeekOffset\(offset\)/);
   assert.match(styles, /@media \(display-mode: standalone\)/);
   assert.match(styles, /padding-top: env\(safe-area-inset-top\)/);
   assert.match(styles, /\.pull-refresh\.refreshing/);
@@ -226,11 +191,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /dailyDrJoeWarmup/);
   assert.match(data, /warmup: dailyDrJoeWarmup/g);
   assert.equal((data.match(/warmup: dailyDrJoeWarmup/g) ?? []).length, 7);
-  assert.match(app, /DAILY DR\. JOE WARM-UP/);
-  assert.match(app, /Sessions 01–07/);
-  assert.match(app, /Existing Sessions 01–03 baseline only/);
-  assert.match(app, /warmup-s\$\{session\.number\}-/);
-  assert.match(app, /WarmupExerciseCard/);
+  assert.match(app, /SESSIONS 01–07/);
   assert.match(data, /Hanging leg raises/);
   assert.match(data, /prescription: "15 reps · bodyweight"/);
   assert.match(data, /Incline treadmill walk/);
@@ -248,7 +209,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
-  assert.match(serviceWorker, /rebuild-shell-v12/);
+  assert.match(serviceWorker, /rebuild-shell-v13/);
   assert.doesNotMatch(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 

@@ -1,0 +1,21 @@
+.library-only-shell { padding-bottom: calc(36px + env(safe-area-inset-bottom)); }
+.library-only-shell .library-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 5px; background: #e3e6dc; border-radius: 16px; margin-bottom: 22px; }
+.library-only-shell .library-tabs button { min-height: 48px; border: 0; border-radius: 12px; background: transparent; color: var(--ink); font: inherit; font-size: 13px; font-weight: 650; cursor: pointer; }
+.library-only-shell .library-tabs [aria-selected="true"] { background: var(--ink); color: white; }
+.library-only-shell button:focus-visible, .library-only-shell a:focus-visible, .library-only-shell [role="tabpanel"]:focus-visible { outline: 3px solid #397950; outline-offset: 3px; }
+.library-only-shell .library-session > header { flex-wrap: wrap; align-items: center; gap: 10px; }
+.library-only-shell .library-session > header > h3 { flex: 1; min-width: 0; }
+.library-only-shell .session-info-button { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: #eaf0df; color: var(--green); font-size: 23px; cursor: pointer; }
+.library-only-shell .session-info { flex-basis: 100%; border-radius: 12px; padding: 12px; background: #eaf0df; color: var(--green); }
+.library-only-shell .session-info p { margin: 0; font-size: 12px; line-height: 1.6; }
+.library-only-shell .session-info p + p { margin-top: 9px; }
+.library-only-shell .area-explainer { font-size: 12px; line-height: 1.6; color: var(--muted); margin: 0 0 20px; }
+.library-only-shell .source-session { font-size: 10px; line-height: 1.5; color: var(--muted); margin: 4px 4px 8px; }
+.library-only-shell .area-source-info { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px; font-size: 11px; color: var(--muted); margin: 4px 0 12px; }
+.library-only-shell .library-exercise-copy, .library-only-shell .session-info { overflow-wrap: anywhere; }
+@media (max-width: 350px) {
+  .library-only-shell .library-session { padding: 12px; }
+  .library-only-shell .library-session h3 { font-size: 17px; }
+  .library-only-shell .session-number { width: 43px; }
+  .library-only-shell .library-exercise > button { gap: 8px; padding: 10px; }
+}
