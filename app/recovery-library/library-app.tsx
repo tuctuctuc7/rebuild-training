@@ -26,7 +26,7 @@ const copy = {
     of: "of",
     exercises: "exercises",
     group: "GROUP",
-    recommendedIntensity: "Recommended intensity",
+    recommendedIntensity: "Supplied dose · not a personal prescription",
     targetArea: "Target area",
     watchDemo: "Watch demo",
     alternateDemo: "Alternate demo",
@@ -53,7 +53,7 @@ const copy = {
     of: "trên",
     exercises: "bài tập",
     group: "NHÓM",
-    recommendedIntensity: "Cường độ gợi ý",
+    recommendedIntensity: "Liều tập tham khảo · không phải chỉ định cá nhân",
     targetArea: "Vùng tác động",
     watchDemo: "Xem demo",
     alternateDemo: "Demo thay thế",
@@ -78,9 +78,16 @@ const groupCopy: Record<MuscleGroupId, Record<Language, { label: string; summary
     en: { label: "Lower-Body Strength", summary: "Strength patterns for squatting, single-leg loading and resilient lower-limb mechanics." },
     vi: { label: "Sức mạnh thân dưới", summary: "Các mẫu vận động tăng sức mạnh cho squat, chịu lực một chân và cơ chế thân dưới bền hơn." },
   },
+  "trunk": {
+    en: { label: "Trunk & Back", summary: "Release, breathing and rotation drills for trunk control." },
+    vi: { label: "Thân mình & Lưng", summary: "Các bài thả lỏng, hít thở và xoay giúp kiểm soát thân mình." },
+  },
 };
 
 function GroupIcon({ group }: { group: MuscleGroupId }) {
+  if (group === "trunk") {
+    return <svg className="body-part-icon" viewBox="0 0 64 64" aria-hidden="true"><path d="M22 8l-8 10 5 17-2 20h30l-2-20 5-17-8-10M32 10v43M22 23h20M23 33h18M25 43h14" /></svg>;
+  }
   if (group === "ankle-foot") {
     return (
       <svg className="body-part-icon" viewBox="0 0 64 64" aria-hidden="true">
@@ -123,14 +130,27 @@ const exerciseVi: Record<string, { name: string; intensity: string; description:
   "ankle-dorsiflexion-stretch": { name: "Giãn gập cổ chân tư thế nửa quỳ", intensity: "2 hiệp × 20–30 giây mỗi bên", description: "Bài giãn nhẹ cho bắp chân và cổ chân, giúp squat, chạy và di chuyển trên sân bớt bị kẹt." },
   "short-foot": { name: "Short Foot - kích hoạt vòm bàn chân", intensity: "2 hiệp × 10 lần mỗi bên · giữ 3 giây", description: "Tập các cơ nhỏ trong bàn chân để nâng và kiểm soát vòm chân mà không co quắp ngón chân." },
   "tripod-hold": { name: "Giữ thăng bằng tripod một chân trên block", intensity: "2 hiệp × 20–30 giây mỗi bên", description: "Rèn thăng bằng qua ba điểm tiếp xúc: gót, ngón cái và ngón út, giúp đứng và đổi hướng ổn định hơn." },
-  "hip-ir-liftoff": { name: "Nâng xoay trong hông tư thế 90/90", intensity: "2 hiệp × 8 lần mỗi bên", description: "Tăng sức chủ động cho xoay trong hông trong biên độ nhỏ, giúp hông xoay mà không mượn chuyển động từ lưng dưới." },
-  "half-kneeling-hip-ir": { name: "Xoay trong hông tư thế nửa quỳ", intensity: "2 hiệp × 10 lần mỗi bên", description: "Mở xoay trong hông trong khi giữ khung chậu yên, hữu ích trước squat, lunge và di chuyển trên sân." },
-  "clamshell": { name: "Clamshell", intensity: "2 hiệp × 12–15 lần mỗi bên", description: "Tác động vào mông bên để tăng ổn định hông và giảm bù trừ từ khung chậu hoặc lưng dưới khi đứng một chân." },
+  "hip-ir-liftoff": { name: "Nâng xoay trong hông tư thế 90/90", intensity: "Buổi 01 · 2 hiệp × 8 lần mỗi bên", description: "Tăng sức chủ động cho xoay trong hông trong biên độ nhỏ, giúp hông xoay mà không mượn chuyển động từ lưng dưới." },
+  "half-kneeling-hip-ir": { name: "Xoay trong hông tư thế nửa quỳ · biến thể Buổi 02", intensity: "Buổi 02 · 2 hiệp × 10 lần · bên trái", description: "Buổi 02 có liều tập và bên tập khác Buổi 01 (2 hiệp × 8 lần mỗi bên), dù dùng cùng demo. Chưa xác nhận thay thế hay kết hợp; không mặc định chỉ định nào thay thế chỉ định còn lại." },
+  "clamshell": { name: "Clamshell", intensity: "Buổi 01: 2 hiệp × 12–15 lần mỗi bên · Buổi 03: 2 hiệp × 15 lần cả hai bên", description: "Buổi 01: 2 hiệp × 12–15 lần mỗi bên. Buổi 03: 2 hiệp × 15 lần cả hai bên. Chưa xác nhận thay thế hay kết hợp. Demo hiển thị thuộc Buổi 01; liên kết Buổi 03 sai định dạng và không được thay bằng video khác." },
   "single-leg-glute-bridge": { name: "Cầu mông một chân", intensity: "3 hiệp × 8–10 lần mỗi bên · giữ 2 giây", description: "Tăng lực đẩy của mông và kiểm soát khung chậu trong động tác duỗi hông mà không cần tải nặng." },
   "knee-to-wall": { name: "Knee-to-Wall - cổ chân chạm tường", intensity: "3 hiệp × 10 lần mỗi bên", description: "Bài kiểm tra và cải thiện gập cổ chân đơn giản, tập đưa gối về trước trong khi vẫn giữ gót chân chạm đất." },
   "lateral-step-down": { name: "Bước xuống ngang", intensity: "2–3 hiệp × 8 lần mỗi bên", description: "Rèn kiểm soát khi hạ người trên một chân, ổn định hông và hướng gối cho cầu thang, giảm tốc và đổi hướng." },
   "split-squat": { name: "Split Squat", intensity: "2–3 hiệp × 8 lần mỗi bên", description: "Tăng sức mạnh thân dưới ở tư thế so le, đồng thời thử thách thăng bằng, kiểm soát hông và chịu lực đều hai bên." },
   "goblet-squat": { name: "Goblet Squat", intensity: "3 hiệp × 8 lần", description: "Biến thể squat ôm tạ trước ngực giúp củng cố mẫu squat cân bằng, thân người thẳng và sức mạnh thân dưới có kiểm soát." },
+  "foam-roll-tfl": {"name": "Lăn cơ TFL", "intensity": "2 hiệp × 60–90 giây · bên trái", "description": "Thả lỏng cơ căng mạc đùi ở phía ngoài hông bằng con lăn."},
+  "foam-roll-ql": {"name": "Lăn cơ vuông thắt lưng", "intensity": "2 hiệp × 60–90 giây · bên trái", "description": "Thả lỏng cơ vuông thắt lưng bằng con lăn."},
+  "tfl-stretch": {"name": "Giãn cơ TFL", "intensity": "4–5 lần × giữ 30 giây · bên trái", "description": "Giãn cơ căng mạc đùi ở phía ngoài hông."},
+  "ql-stretch": {"name": "Giãn cơ vuông thắt lưng", "intensity": "4–5 lần × giữ 30 giây · bên trái", "description": "Giãn cơ vuông thắt lưng dọc bên thân dưới."},
+  "copenhagen-adduction": {"name": "Khép đùi Copenhagen", "intensity": "2–3 hiệp × 8–10 lần · tập trung cơ khép trái", "description": "Bài tăng sức mạnh cơ khép đùi hỗ trợ ổn định khung chậu."},
+  "side-plank": {"name": "Plank nghiêng", "intensity": "2–3 hiệp · giữ đến khi mỏi · bên phải", "description": "Giữ tư thế chống nghiêng để rèn kiểm soát thân mình và khung chậu."},
+  "wall-supported-control": {"name": "Kiểm soát TFL / Mông / QL với tường", "intensity": "5 hiệp × giữ 10–15 giây · cả hai bên", "description": "Bài nằm nghiêng kết hợp bàn chân tựa tường, tay tựa con lăn và vươn tay qua đầu. Hướng dẫn bên phải: nằm bên trái, gập hông phải khoảng 90°, đưa bàn chân phải về sau đến ngay trước khi lưng bắt đầu ưỡn. Nhẹ nhàng nâng thân trái và vươn tay phải về phía đầu. Không có video; xác nhận tư thế với chuyên gia."},
+  "pelvis-rib-cage-breathing": {"name": "Hít thở phối hợp khung chậu và lồng ngực", "intensity": "2 hiệp × 10 nhịp thở chậm", "description": "Bài thở dành cho một kiểu vận động cụ thể, phối hợp cơ đùi sau và xoay đối chiều lồng ngực. Liều tập lấy từ demo. Xác nhận tính phù hợp và tư thế từng bên với chuyên gia."},
+  "verteq-release": {"name": "Thả lỏng cơ thắt lưng chậu và cạnh sống · Verteq", "intensity": "Chưa có liều tập — hỏi chuyên gia", "description": "Thả lỏng bằng dụng cụ, tác động cơ thắt lưng chậu và cạnh sống. Chỉ để tham khảo: chưa có kỹ thuật, liều tập hoặc demo."},
+  "hip-shift": {"name": "Dịch chuyển hông 90/90", "intensity": "2–3 hiệp × 10 nhịp thở sâu · giữ thay vì lặp động tác", "description": "Giữ tư thế dịch chuyển hông kết hợp thở sâu. Xác nhận tư thế từng bên với chuyên gia."},
+  "lock-clam": {"name": "Lock Clam", "intensity": "3 hiệp × 12 lần", "description": "Biến thể clamshell đặt bàn chân trên sau bắp chân đối diện, khác với clamshell thông thường. Xác nhận tư thế từng bên với chuyên gia."},
+  "hamstring-slides": {"name": "Trượt gót tập cơ đùi sau · bản giảm độ khó", "intensity": "3 hiệp × 10 lần", "description": "Bài cơ đùi sau ở tư thế cầu mông, trượt gót ra xa có kiểm soát."},
+  "side-plank-rotations": {"name": "Plank nghiêng kết hợp xoay", "intensity": "2–3 hiệp × 10 lần · cả hai bên", "description": "Thêm xoay cột sống ngực vào plank nghiêng, khác với giữ plank tĩnh."},
 };
 
 function localizeExercise(exercise: LibraryExercise, language: Language) {
@@ -162,7 +182,7 @@ function ExerciseCard({ exercise, language }: { exercise: LibraryExercise; langu
             <div><span>{text.targetArea}</span><strong>{target.label}</strong></div>
           </div>
           <div className="library-video-links">
-            <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">{text.watchDemo} <span aria-hidden="true">↗</span></a>
+            {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">{text.watchDemo} <span aria-hidden="true">↗</span></a>}
             {exercise.alternateVideo && <a className="video-link" href={exercise.alternateVideo} target="_blank" rel="noreferrer">{text.alternateDemo} <span aria-hidden="true">↗</span></a>}
           </div>
         </div>

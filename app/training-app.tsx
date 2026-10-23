@@ -227,9 +227,9 @@ function LibraryExerciseCard({ exercise, index }: { exercise: LibraryExercise; i
       {open && (
         <div className="library-exercise-detail">
           <ul className="cue-list">{exercise.cues.map((cue) => <li key={cue}>{cue}</li>)}</ul>
-          <p className="exercise-goal">Why: {exercise.goal}</p>
+          {exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}
           <div className="library-video-links">
-            <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch Dr. Joe demo <span aria-hidden="true">↗</span></a>
+            {exercise.video && <a className="video-link" href={exercise.video} target="_blank" rel="noreferrer">Watch Dr. Joe demo <span aria-hidden="true">↗</span></a>}
             {exercise.alternateVideo && <a className="video-link" href={exercise.alternateVideo} target="_blank" rel="noreferrer">Watch alternate demo <span aria-hidden="true">↗</span></a>}
           </div>
         </div>
@@ -241,7 +241,7 @@ function LibraryExerciseCard({ exercise, index }: { exercise: LibraryExercise; i
 function WarmupExerciseCard({ exercise, index, checks, onCheck }: { exercise: Exercise; index: number; checks: boolean[]; onCheck: (set: number, checked: boolean) => void }) {
   const [open, setOpen] = useState(false);
   const done = checks.filter(Boolean).length;
-  const complete = done === exercise.sets;
+  const complete = exercise.sets > 0 && done === exercise.sets;
   return (
     <article className={`library-exercise warmup-exercise ${open ? "is-open" : ""} ${complete ? "exercise-complete" : ""}`}>
       <button onClick={() => setOpen(!open)} aria-expanded={open}>
@@ -560,7 +560,7 @@ export function TrainingApp() {
           {warmup.length > 0 && (
             <section className="exercise-section warmup-section">
               <div className="section-title exercise-title">
-                <div><p className="eyebrow">DAILY DR. JOE WARM-UP</p><h3>{warmupTotals.completed}/{warmupTotals.total} sets complete</h3><p>Done before tennis, gym, recovery, or rest. Session 01 + Session 02 + Session 03 every day.</p></div>
+                <div><p className="eyebrow">DAILY DR. JOE WARM-UP</p><h3>{warmupTotals.completed}/{warmupTotals.total} sets complete</h3><p>Existing Sessions 01–03 baseline only. Latest Sessions 04–07 are not confirmed cumulative or daily and do not count toward daily completion.</p></div>
                 <div className="progress-ring" style={{ "--progress": `${warmupTotals.total ? (warmupTotals.completed / warmupTotals.total) * 360 : 0}deg` } as React.CSSProperties}><span>{warmupTotals.total ? Math.round((warmupTotals.completed / warmupTotals.total) * 100) : 0}%</span></div>
               </div>
               <div className="today-warmup-sessions">
@@ -568,7 +568,7 @@ export function TrainingApp() {
                   <section className="library-session today-warmup-session" key={session.id}>
                     <header>
                       <div className="session-number"><small>SESSION</small><strong>{session.number}</strong></div>
-                      <div><h3>{session.title}</h3><p>{session.summary}</p></div>
+                      <div><h3>{session.title}</h3><p>{session.summary}</p>{session.continuation && <p>{session.continuation}</p>}</div>
                     </header>
                     <div className="warmup-session-progress" aria-label={`${session.completed} of ${session.total} sets complete`}>
                       <span>{session.completed}/{session.total} sets</span>
@@ -582,6 +582,13 @@ export function TrainingApp() {
               </div>
             </section>
           )}
+
+          <section className="exercise-section">
+            <p className="eyebrow">SESSION LIBRARY · Sessions 01–07</p>
+            <h3>Latest sessions · optional reference</h3>
+            <p>Sessions 04–07 are available in Library, not added to this checklist. Confirm how they combine with earlier sessions with Dr. Joe. Session 07 explicitly continues ankle dorsiflexion work; this does not establish a daily combined routine.</p>
+            <button className="back-today" onClick={() => setActiveTab("library")}>View session library</button>
+          </section>
 
           {workout.exercises.length > 0 ? (
             <section className="exercise-section">
