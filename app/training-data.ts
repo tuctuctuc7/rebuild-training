@@ -31,7 +31,7 @@ export type LibraryExercise = {
   id: string;
   name: string;
   prescription: string;
-  video: string;
+  video?: string;
   alternateVideo?: string;
   cues: string[];
   goal: string;
@@ -105,6 +105,58 @@ const tripod: Exercise = {
   cues: ["Use light hand support if needed", "Equal pressure through heel, big toe and little toe", "Keep the pelvis level"],
   goal: "Improve foot control, balance and force transfer.",
 };
+
+// Only supplied prescriptions are tracked. Zero sets means reference-only until clarified.
+const subsequentDrJoeSessions: (Omit<DrJoeSession, "exercises"> & { exercises: (LibraryExercise & { sets: number; side?: string })[] })[] = [
+  {
+    id: "session-04", number: "04", title: "Wall-supported hip and trunk control",
+    summary: "A side-lying control exercise combining TFL lengthening, glute activation and QL control.",
+    exercises: [{
+      id: "s04-wall-supported-control", name: "Wall-supported TFL / Glute / QL Control",
+      prescription: "5 sets × hold 10–15 sec · both sides", sets: 5,
+      cues: [
+        "Perform both sides. The supplied setup describes the right side.",
+        "Lie on your left side with your right hip facing the ceiling.",
+        "Position yourself far enough from the wall that your right foot can just make full contact with it.",
+        "Keep the right hip at approximately 90° of flexion.",
+        "Bring the right foot slightly backward toward your body until just before your lower back begins to arch.",
+        "Place your right hand on a foam roller.",
+        "Gently lift the left side of your trunk away from the floor while reaching your right arm toward your head.",
+        "If the foot is too far back, the lower back will start to arch."
+      ],
+      goal: "Lengthen the right TFL and QL, activate the right glute, and activate the right QL to control the pelvis and trunk.",
+    }],
+  },
+  {
+    id: "session-05", number: "05", title: "Pelvis and rib-cage breathing",
+    summary: "A linked breathing drill coordinating the pelvis, hamstrings and rib cage.",
+    continuation: "The linked demo supplies the breathing dose. Confirm the side-specific setup with Dr. Joe; no side is inferred here.",
+    exercises: [{
+      id: "s05-pelvis-rib-cage-breathing", name: "Pelvis and Rib-Cage Breathing Drill",
+      prescription: "2 sets × 10 slow breaths", sets: 2,
+      video: "https://www.facebook.com/reel/834211419781501",
+      cues: ["Dose from Dr. Joe’s linked demo: 10 slow breaths for 2 sets.", "This is a pattern-specific drill; confirm the appropriate setup with Dr. Joe."],
+      goal: "Activate the hamstring, coordinate counter-rotation through the rib cage and improve rib-cage expansion during breathing.",
+    }],
+  },
+  {
+    id: "session-06", number: "06", title: "Release, breathing and posterior-chain control",
+    summary: "Verteq release, a held hip-shift breathing drill, lock clam and eccentric hamstring slides.",
+    continuation: "Release dosage and side-specific setup were not supplied. Confirm them with Dr. Joe; release remains reference-only, with no set checklist.",
+    exercises: [
+      { id: "s06-verteq-release", name: "Psoas and Paraspinal Release · Verteq Tool", prescription: "Dosage not supplied — confirm with Dr. Joe", sets: 0, cues: [], goal: "" },
+      { id: "s06-hip-shift", name: "90/90 Hip Shift", prescription: "2–3 sets × 10 deep breaths · hold rather than reps", sets: 2, video: "https://www.youtube.com/shorts/vM92OGZXH3g", cues: ["Hold rather than perform repetitions."], goal: "" },
+      { id: "s06-lock-clam", name: "Lock Clam", prescription: "3 sets × 12 reps", sets: 3, video: "https://www.youtube.com/shorts/F1_dSq8vggY", cues: [], goal: "" },
+      { id: "s06-hamstring-slides", name: "Eccentric Hamstring Slides · Regression", prescription: "3 sets × 10 reps", sets: 3, video: "https://www.youtube.com/watch?v=JGcxXlB6qdI", cues: [], goal: "" },
+    ],
+  },
+  {
+    id: "session-07", number: "07", title: "Add thoracic rotation",
+    summary: "Side plank rotations on both sides.",
+    continuation: "Continue improving ankle dorsiflexion alongside this addition; the earlier ankle drills remain in their original sessions.",
+    exercises: [{ id: "s07-side-plank-rotations", name: "Side Plank Rotations", prescription: "2–3 sets × 10 reps · both sides", sets: 2, video: "https://www.youtube.com/watch?v=OMc5f_JUDUU", cues: [], goal: "Improve thoracic rotation." }],
+  },
+];
 
 export const dailyDrJoeWarmup: Exercise[] = [
   { ...tibial, id: "warmup-s01-tibial-ir", prescription: "2 sets × 15 reps each side", sets: 2 },
@@ -237,7 +289,7 @@ export const workouts: Workout[] = [
 export const weekRules = [
   "One tennis session stays deliberately easy",
   "No hard tennis on consecutive days",
-  "Full Dr. Joe Session 01 + Session 02 + Session 03 warm-up happens every day before tennis, gym, recovery or rest",
+  "Daily checklist retains the existing Sessions 01–03 baseline; Sessions 04–07 are library-only, not confirmed cumulative or daily",
   "Core and low-intensity cardio live on gym days unless recovery says otherwise",
   "Progress only when the following morning is back to baseline",
 ];
@@ -321,8 +373,9 @@ export const drJoeLibrary: DrJoeSession[] = [
     number: "02",
     title: "Re-centre the squat",
     summary: "Left hip internal rotation, ankle dorsiflexion, glute strength and more symmetrical loading.",
-    continuation: "Continue Session 01's tibial internal rotation routine alongside these exercises.",
+    continuation: "Continue Session 01's tibial internal rotation routine alongside these exercises. Session 02 hip rotation uses the same demo as Session 01 but a different dose and side; replacement or combination is not confirmed. The variant is retained here as reference, not added to the existing daily checklist.",
     exercises: [
+      { id: "s02-hip-ir", name: "Half-Kneeling Hip Internal Rotation · Session 02 variant", prescription: "2 sets × 10 reps · left", video: "https://www.youtube.com/shorts/jAA1Sh2IGL4", cues: ["Keep the pelvis facing forward.", "Rotate from the hip rather than the lower back.", "Move slowly and under control.", "Session 01 supplies 2 sets × 8 reps each side with this same demo. Neither prescription is assumed to supersede the other."], goal: "Improve left hip internal rotation and left hip loading during squatting." },
       {
         id: "s02-knee-wall",
         name: "Knee-to-Wall Ankle Mobilisation",
@@ -370,7 +423,7 @@ export const drJoeLibrary: DrJoeSession[] = [
     number: "03",
     title: "Rebalance the pelvis",
     summary: "Left TFL and QL release, targeted stretching, left adductor activation and right-side trunk strength.",
-    continuation: "Clamshell remains in Session 01 and is not repeated here.",
+    continuation: "Session 03 clamshell: 2 sets × 15 reps both sides. Session 01: 2 sets × 12–15 reps each side. These are distinct supplied doses; replacement or combination is not confirmed. The Session 03 demo link is malformed and is not substituted. This variant is noted here, not added to daily completion.",
     exercises: [
       { id: "s03-foam-roll-tfl", name: "Foam Roll TFL · Left Side", prescription: "2 sets × 60–90 sec", video: "https://www.youtube.com/shorts/dCSN5TdsmxU", cues: [], goal: "Reduce TFL tightness and the upward pull contributing to the left hip hike." },
       { id: "s03-foam-roll-ql", name: "Foam Roll Quadratus Lumborum · Left Side", prescription: "2 sets × 60–90 sec", video: "https://www.youtube.com/shorts/qMtQuXl5skM", cues: [], goal: "Reduce QL tightness and improve lumbar and pelvic balance." },
@@ -380,4 +433,5 @@ export const drJoeLibrary: DrJoeSession[] = [
       { id: "s03-side-plank", name: "Side Plank · Right Side", prescription: "2–3 sets · hold until fatigue", video: "https://www.youtube.com/shorts/sKMD_pbNm7w", cues: [], goal: "Strengthen the right QL and improve pelvic stability and control." },
     ],
   },
+  ...subsequentDrJoeSessions,
 ];

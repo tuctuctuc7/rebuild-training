@@ -35,6 +35,9 @@ test("server-renders the original finished training app at /get-fit and metadata
   assert.match(html, /Restore the lower-leg chain/);
   assert.match(html, /Re-centre the squat/);
   assert.match(html, /Rebalance the pelvis/);
+  assert.match(html, /not confirmed cumulative or daily/);
+  assert.match(html, /Latest sessions · optional reference/);
+  assert.match(html, /View session library/);
   assert.match(html, /rel="manifest" href="https:\/\/build\.tomnguyen\.co\/get-fit\/manifest\.webmanifest"/);
   assert.match(html, /rel="icon" href="https:\/\/build\.tomnguyen\.co\/get-fit\/icon-192\.png"/);
   assert.match(html, /property="og:image" content="https:\/\/build\.tomnguyen\.co\/get-fit\/og\.png"/);
@@ -53,6 +56,11 @@ test("server-renders the lightweight public recovery library at /recovery-librar
   assert.match(html, /Ankle &amp; Foot|Ankle & Foot/);
   assert.match(html, /Hip &amp; Glute|Hip & Glute/);
   assert.match(html, /Lower-Body Strength/);
+  assert.match(html, /Trunk &amp; Back|Trunk & Back/);
+  assert.match(html, /Side Plank Rotations/);
+  assert.match(html, /Lock Clam/);
+  assert.match(html, /Session 02 · 2 sets × 10 reps · left/);
+  assert.match(html, /Session 03: 2 sets × 15 reps both sides/);
   assert.match(html, /Tibial Internal Rotation Mobilisation/);
   assert.match(html, /Rebuild return athletic cover image/);
   assert.doesNotMatch(html, /PUBLIC MOVEMENT LIBRARY|Find the right drill fast/);
@@ -77,6 +85,10 @@ test("server-renders the Vietnamese native recovery library route", async () => 
   assert.match(html, /Hông &amp; Mông|Hông & Mông/);
   assert.match(html, /Sức mạnh thân dưới/);
   assert.match(html, /Xoay trong xương chày/);
+  assert.match(html, /Plank nghiêng kết hợp xoay/);
+  assert.match(html, /Buổi 02 · 2 hiệp × 10 lần · bên trái/);
+  assert.match(html, /Buổi 03: 2 hiệp × 15 lần cả hai bên/);
+  assert.match(html, /Thân mình &amp; Lưng|Thân mình & Lưng/);
   assert.match(html, /href="\/recovery-library\/"/);
   assert.doesNotMatch(html, /How are you arriving\?|Save to history|Session RPE/i);
 });
@@ -166,7 +178,7 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /id: "session-03"/);
   assert.match(data, /Tibial Internal Rotation Mobilisation/);
   assert.match(data, /Goblet Squat with Left Weight Bias/);
-  assert.doesNotMatch(data, /id: "s02-hip-ir"/);
+  assert.match(data, /id: "s02-hip-ir"/);
   assert.doesNotMatch(data, /id: "warmup-s02-hip-ir"/);
   for (const id of [
     "s03-foam-roll-tfl",
@@ -215,8 +227,8 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(data, /warmup: dailyDrJoeWarmup/g);
   assert.equal((data.match(/warmup: dailyDrJoeWarmup/g) ?? []).length, 7);
   assert.match(app, /DAILY DR\. JOE WARM-UP/);
-  assert.match(app, /Session 01 \+ Session 02 \+ Session 03 every day/);
-  assert.match(app, /Done before tennis, gym, recovery, or rest/);
+  assert.match(app, /Sessions 01–07/);
+  assert.match(app, /Existing Sessions 01–03 baseline only/);
   assert.match(app, /warmup-s\$\{session\.number\}-/);
   assert.match(app, /WarmupExerciseCard/);
   assert.match(data, /Hanging leg raises/);
@@ -236,8 +248,8 @@ test("contains the complete local-first training and offline flows", async () =>
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
-  assert.match(serviceWorker, /rebuild-shell-v9/);
-  assert.match(serviceWorker, /client\.navigate\(client\.url\)/);
+  assert.match(serviceWorker, /rebuild-shell-v12/);
+  assert.doesNotMatch(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 
 test("keeps the recovery library separate from the original /get-fit app files", async () => {
@@ -257,6 +269,6 @@ test("keeps the recovery library separate from the original /get-fit app files",
   assert.match(libraryData, /group: "lower-body-strength"/);
   assert.equal(manifest.start_url, "/recovery-library/");
   assert.equal(manifest.scope, "/recovery-library/");
-  assert.match(libraryServiceWorker, /rebuild-recovery-library-shell-v1/);
+  assert.match(libraryServiceWorker, /rebuild-recovery-library-shell-v4/);
   assert.match(libraryServiceWorker, /\/recovery-library\//);
 });

@@ -1,4 +1,5 @@
-const CACHE = "rebuild-shell-v9";
+const CACHE = "rebuild-shell-v12";
+const CACHE_PREFIX = "rebuild-shell-";
 const APP_ROOT = "/get-fit/";
 const CORE = [APP_ROOT, `${APP_ROOT}manifest.webmanifest`, `${APP_ROOT}icon-192.png`, `${APP_ROOT}icon-512.png`, `${APP_ROOT}rebuild-header-v2.jpg`];
 
@@ -9,10 +10,10 @@ self.addEventListener("install", (event) => {
 self.addEventListener("activate", (event) => {
   event.waitUntil((async () => {
     const keys = await caches.keys();
-    await Promise.all(keys.filter((key) => key !== CACHE).map((key) => caches.delete(key)));
+    await Promise.all(keys.filter((key) => key.startsWith(CACHE_PREFIX) && key !== CACHE).map((key) => caches.delete(key)));
     await self.clients.claim();
-    const windows = await self.clients.matchAll({ type: "window" });
-    await Promise.all(windows.map((client) => client.navigate(client.url)));
+    // Controlled navigation waits for activation: awaiting it here deadlocks.
+    // Keep open pages (and unsaved drafts) intact; refresh on normal navigation.
   })());
 });
 
