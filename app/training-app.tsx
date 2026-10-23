@@ -42,6 +42,28 @@ function SessionInfo({ session }: { session: DrJoeSession }) {
 }
 
 const entries = drJoeLibrary.flatMap(session => session.exercises.map(exercise => ({ exercise, session })));
+function MuscleArea({ area }: { area: typeof muscleAreas[number] }) {
+  const [open, setOpen] = useState(false);
+  const id = useId();
+  return <section className="library-session muscle-area">
+    <header>
+      <h3><button type="button" className="area-toggle" aria-expanded={open} aria-controls={id} onClick={() => setOpen(!open)}>
+        <span>{area.label}<small>{area.exerciseIds.length} {area.exerciseIds.length === 1 ? "exercise" : "exercises"}</small></span>
+        <span className="chevron" aria-hidden="true">{open ? "−" : "+"}</span>
+      </button></h3>
+    </header>
+    <div id={id} hidden={!open}>
+      {open && <>
+        <p className="area-basis">{area.basis}</p>
+        <div className="library-exercise-list">{area.exerciseIds.map((exerciseId, index) => {
+          const entry = entries.find(item => item.exercise.id === exerciseId)!;
+          return <div key={exerciseId} className="area-entry"><p className="source-session">Session {entry.session.number} · {entry.session.title}</p><LibraryExerciseCard exercise={entry.exercise} index={index} /></div>;
+        })}</div>
+      </>}
+    </div>
+  </section>;
+}
+
 const tabs = [{ id: "session", label: "By session" }, { id: "area", label: "By muscle area" }] as const;
 type Grouping = typeof tabs[number]["id"];
 
@@ -185,13 +207,7 @@ export function TrainingApp() {
           </section>)}
         </div> : <>
           <p className="area-explainer">Areas follow the exercise names and supplied goals. An exercise can appear in more than one area; it is the same reference, not an extra prescription.</p>
-          <div className="library-sessions">{muscleAreas.map(area => <section className="library-session" key={area.id}>
-            <header><div><h3>{area.label}</h3><p>{area.basis}</p></div></header>
-            <div className="library-exercise-list">{area.exerciseIds.map((id, index) => {
-              const entry = entries.find(item => item.exercise.id === id)!;
-              return <div key={id} className="area-entry"><p className="source-session">Session {entry.session.number} · {entry.session.title}</p><LibraryExerciseCard exercise={entry.exercise} index={index} /><div className="area-source-info"><span>Session notes</span><SessionInfo session={entry.session} /></div></div>;
-            })}</div>
-          </section>)}</div>
+          <div className="library-sessions">{muscleAreas.map(area => <MuscleArea key={area.id} area={area} />)}</div>
         </>}
       </div>
     </section>
