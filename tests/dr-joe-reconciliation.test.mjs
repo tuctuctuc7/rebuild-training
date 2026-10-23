@@ -46,10 +46,10 @@ test('reconciles sessions 01–07 without inventing missing prescriptions', asyn
 
 test('reference-only cards cannot appear completed or create empty demo links', () => {
   const app = readFileSync(new URL('../app/training-app.tsx', import.meta.url), 'utf8');
-  assert.ok(app.includes('const complete = exercise.sets > 0 && done === exercise.sets;'));
+  assert.doesNotMatch(app, /exercise-complete|onCheck|setTimer/);
   assert.ok(app.includes('{exercise.video && <a className="video-link" href={exercise.video}'));
   assert.ok(app.includes('{exercise.goal && <p className="exercise-goal">Why: {exercise.goal}</p>}'));
-  assert.ok(app.includes('Sessions 01–07'));
+  assert.ok(app.includes('SESSIONS 01–07'));
 });
 
 test('public library covers supplied movements once without personal health context', async () => {
