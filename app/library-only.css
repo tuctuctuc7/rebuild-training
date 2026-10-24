@@ -44,6 +44,7 @@
   .library-only-shell .muscle-area > header { padding-bottom: 0; }
 }
 @media (min-width: 1024px) {
+  .library-only-shell .hero-art { background-image: linear-gradient(90deg, rgba(10,28,20,.72) 0%, rgba(10,28,20,.10) 57%, transparent 100%), url('/get-fit/rebuild-desktop-panorama.webp'); background-position: center; }
   .library-only-shell .library-screen { display: grid; grid-template-columns: minmax(0, 1fr) 320px; column-gap: 32px; align-items: center; }
   .library-only-shell .page-heading { padding: 0 0 28px; }
   .library-only-shell .library-tabs { margin-bottom: 28px; }
