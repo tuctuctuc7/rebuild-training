@@ -32,6 +32,8 @@ try {
     assert.equal(await page.getByRole('tab').count(), 2);
     assert.equal(await page.locator('.week-chip,.bottom-nav,[role="timer"],input[type="range"],.set-check,.checkin-card').count(), 0);
     const info = page.getByRole('button', { name: 'About session 01', exact: true });
+    // Entry animations affect measured visual hit targets; wait before geometry assertions.
+    await page.evaluate(() => Promise.all(document.getAnimations().map(animation => animation.finished.catch(() => {}))));
     const target = await info.boundingBox();
     assert.ok(target.width >= 44 && target.height >= 44, 'info touch target');
     const icon = await info.locator('span').boundingBox();

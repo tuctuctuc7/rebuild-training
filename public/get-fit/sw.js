@@ -1,4 +1,4 @@
-const CACHE = "rebuild-shell-v14";
+const CACHE = "rebuild-shell-v15";
 const CACHE_PREFIX = "rebuild-shell-";
 const APP_ROOT = "/get-fit/";
 const CORE = [APP_ROOT, `${APP_ROOT}manifest.webmanifest`, `${APP_ROOT}icon-192.png`, `${APP_ROOT}icon-512.png`, `${APP_ROOT}rebuild-header-v2.jpg`];

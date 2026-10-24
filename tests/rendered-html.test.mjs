@@ -209,7 +209,7 @@ test("contains the preserved source data and standalone offline flows", async ()
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
-  assert.match(serviceWorker, /rebuild-shell-v14/);
+  assert.match(serviceWorker, /rebuild-shell-v15/);
   assert.doesNotMatch(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 
