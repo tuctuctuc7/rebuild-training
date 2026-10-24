@@ -18,6 +18,41 @@
 .library-only-shell .area-toggle .chevron { flex: 0 0 auto; }
 .library-only-shell .area-basis { margin: 12px 0 16px; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .library-only-shell .library-exercise-copy, .library-only-shell .session-info { overflow-wrap: anywhere; }
+/* Keep the phone layout intact; wider screens get a bounded reading canvas.
+   Session/area groups remain full-width so source hierarchy never becomes masonry. */
+@media (min-width: 760px) {
+  .app-shell.library-only-shell { max-width: 1320px; padding-inline: 32px; }
+  .library-only-shell .status-bar-scrim { width: min(1320px, 100%); }
+  .library-only-shell .topbar { height: 80px; }
+  .library-only-shell .hero-art { min-height: 170px; margin-bottom: 28px; padding: 24px; background-position: center 58%; }
+  .library-only-shell .hero-art strong { font-size: 28px; max-width: 240px; line-height: 1.05; }
+  .library-only-shell .page-heading h2 { max-width: none; font-size: 38px; }
+  .library-only-shell .page-heading > p:last-child { max-width: 560px; margin-bottom: 0; }
+  .library-only-shell .library-tabs { max-width: 360px; }
+  .library-only-shell .library-session { padding: 22px; }
+  .library-only-shell .library-session > header { gap: 14px; }
+  .library-only-shell .library-session:not(.muscle-area) > header > h3 { flex: 0 1 auto; }
+  .library-only-shell .session-info { max-width: 760px; }
+  .library-only-shell .library-exercise-list { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; align-items: start; }
+  .library-only-shell .library-exercise > button { min-height: 100px; padding: 14px; }
+  .library-only-shell .library-exercise-copy { flex: 1; }
+  .library-only-shell .library-exercise-copy strong { font-size: 14px; line-height: 1.4; }
+  .library-only-shell .library-exercise-copy small { font-size: 11px; line-height: 1.5; }
+  .library-only-shell .area-entry { min-width: 0; }
+  .library-only-shell .source-session { min-height: 30px; font-size: 11px; }
+  .library-only-shell .area-explainer, .library-only-shell .area-basis { max-width: 760px; }
+  .library-only-shell .muscle-area > header { padding-bottom: 0; }
+}
+@media (min-width: 1024px) {
+  .library-only-shell .library-screen { display: grid; grid-template-columns: minmax(0, 1fr) 320px; column-gap: 32px; align-items: center; }
+  .library-only-shell .page-heading { padding: 0 0 28px; }
+  .library-only-shell .library-tabs { margin-bottom: 28px; }
+  .library-only-shell [role="tabpanel"] { grid-column: 1 / -1; min-width: 0; }
+}
+@media (min-width: 1200px) {
+  .app-shell.library-only-shell { padding-inline: 40px; }
+  .library-only-shell .library-exercise-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
 @media (max-width: 350px) {
   .library-only-shell .library-session { padding: 12px; }
   .library-only-shell .library-session h3 { font-size: 17px; }
