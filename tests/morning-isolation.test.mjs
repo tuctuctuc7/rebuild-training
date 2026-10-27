@@ -13,5 +13,11 @@ test('both sibling workers bypass Morning requests entirely',()=>{
 });
 test('Morning rewrite is fixed to its own backend, never a user-controlled proxy',()=>{
  const config=JSON.parse(readFileSync('vercel.json','utf8'));
- assert.deepEqual(config.rewrites,[{source:'/morning',destination:'https://morning-weight-pi.vercel.app/morning/'},{source:'/morning/:path*',destination:'https://morning-weight-pi.vercel.app/morning/:path*'}]);
+ for(const rewrite of config.rewrites) {
+  assert(rewrite.source.startsWith('/morning'));
+  assert(rewrite.destination.startsWith('https://morning-weight-pi.vercel.app/morning/'));
+ }
+ for(const source of ['/morning','/morning/','/morning/:path*','/morning/:path*/']) {
+  assert(config.rewrites.some(r=>r.source===source),`Explicit strict edge match required: ${source}`);
+ }
 });

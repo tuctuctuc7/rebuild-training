@@ -4,6 +4,14 @@
   "buildCommand": "npx next build",
   "rewrites": [
     {
+      "source": "/morning/",
+      "destination": "https://morning-weight-pi.vercel.app/morning/"
+    },
+    {
+      "source": "/morning/:path*/",
+      "destination": "https://morning-weight-pi.vercel.app/morning/:path*/"
+    },
+    {
       "source": "/morning",
       "destination": "https://morning-weight-pi.vercel.app/morning/"
     },
