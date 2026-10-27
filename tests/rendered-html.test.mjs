@@ -209,7 +209,7 @@ test("contains the preserved source data and standalone offline flows", async ()
   assert.match(serviceWorker, /caches\.open/);
   assert.match(serviceWorker, /event\.request\.mode === "navigate"/);
   assert.match(serviceWorker, /rebuild-header-v2\.jpg/);
-  assert.match(serviceWorker, /rebuild-shell-v16/);
+  assert.match(serviceWorker, /rebuild-shell-v17/);
   assert.doesNotMatch(serviceWorker, /client\.navigate\(client\.url\)/);
 });
 
@@ -230,6 +230,6 @@ test("keeps the recovery library separate from the original /get-fit app files",
   assert.match(libraryData, /group: "lower-body-strength"/);
   assert.equal(manifest.start_url, "/recovery-library/");
   assert.equal(manifest.scope, "/recovery-library/");
-  assert.match(libraryServiceWorker, /rebuild-recovery-library-shell-v4/);
+  assert.match(libraryServiceWorker, /rebuild-recovery-library-shell-v5/);
   assert.match(libraryServiceWorker, /\/recovery-library\//);
 });

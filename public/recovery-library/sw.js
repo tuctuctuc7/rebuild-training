@@ -1,4 +1,4 @@
-const CACHE = "rebuild-recovery-library-shell-v4";
+const CACHE = "rebuild-recovery-library-shell-v5";
 const CACHE_PREFIX = "rebuild-recovery-library-shell-";
 const APP_ROOT = "/recovery-library/";
 const CORE = [APP_ROOT, `${APP_ROOT}manifest.webmanifest`, `${APP_ROOT}icon-192.png`, `${APP_ROOT}icon-512.png`, `${APP_ROOT}rebuild-header-v2.jpg`];
@@ -18,6 +18,8 @@ self.addEventListener("activate", (event) => {
 });
 
 self.addEventListener("fetch", (event) => {
+  const path = new URL(event.request.url).pathname;
+  if (path === "/morning" || path.startsWith("/morning/")) return;
   if (event.request.method !== "GET" || new URL(event.request.url).origin !== self.location.origin) return;
   event.respondWith(fetch(event.request).then((response) => {
     if (response.ok) {
